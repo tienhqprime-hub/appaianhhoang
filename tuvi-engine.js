@@ -58,7 +58,9 @@ const MAIN_STRENGTH = {
   'Vũ Khúc':     ['V','M','V','Đ','M','H','V','M','V','Đ','M','H'],
   'Thái Dương':  ['H','Đ','V','V','V','M','M','Đ','H','H','H','H'],
   'Thiên Cơ':    ['Đ','Đ','H','M','M','V','Đ','Đ','V','M','M','H'],
-  'Thiên Phủ':   ['B','Đ','M','B','V','M','M','Đ','M','B','V','B'],
+  // Bản tham chiếu MIT không gán bảng Miếu/Vượng cho Thiên Phủ; để trống
+  // thay vì suy diễn một bảng khác trường phái.
+  'Thiên Phủ':   ['','','','','','','','','','','',''],
   'Thái Âm':     ['V','Đ','H','H','H','H','H','Đ','V','M','M','M'],
   'Tham Lang':   ['H','M','Đ','H','V','H','H','M','Đ','H','V','H'],
   'Cự Môn':      ['V','H','V','M','H','H','V','H','Đ','M','H','Đ'],
@@ -168,6 +170,7 @@ export function generateChart(input){
   const timeZone=7;const gender=input.gender==='Nữ'?-1:1;const hour=Number(input.hour);const minute=Number(input.minute||0);const hb=hourBranch(hour);
   const solar=input.isLunar?lunarToSolar(input.day,input.month,input.year,input.leap,timeZone):{day:input.day,month:input.month,year:input.year};
   const lunar=input.isLunar?{day:input.day,month:input.month,year:input.year,leap:!!input.leap}:solarToLunar(input.day,input.month,input.year,timeZone);
+  if(input.isLunar){const check=solarToLunar(solar.day,solar.month,solar.year,timeZone);if(check.day!==lunar.day||check.month!==lunar.month||check.year!==lunar.year||check.leap!==lunar.leap)throw new Error('Ngày âm lịch hoặc tháng nhuận không hợp lệ.');}
   const canYear=(lunar.year+6)%10+1,chiYear=(lunar.year+8)%12+1,canMonth=(lunar.year*12+lunar.month+3)%10+1;
   const jd=jdFromDate(solar.day,solar.month,solar.year),canDay=(jd+9)%10+1,chiDay=(jd+1)%12+1;let canHour=((jd-1)*2%10+hb)%10;if(canHour===0)canHour=10;
   const menhPos=wrap(3+lunar.month-hb),thanPos=wrap(3+lunar.month+hb-2);const bureau=findBureau(menhPos,canYear);const nap=napAmForYear(lunar.year);
