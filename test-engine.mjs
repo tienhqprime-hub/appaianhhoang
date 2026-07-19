@@ -8,6 +8,7 @@ assert.deepEqual(lunarToSolar(14,11,1970,false,7), {day:12,month:12,year:1970});
 
 const chart=generateChart({name:'HOÀNG QUỐC TIẾN',gender:'Nam',day:12,month:12,year:1970,hour:19,minute:30,isLunar:false,leap:false,place:'Vĩnh Phúc'});
 assert.equal(chart.meta.yearName,'Canh Tuất');
+assert.equal(chart.meta.monthName,'Mậu Tý');
 assert.equal(chart.meta.hourName,'Mậu Tuất');
 assert.equal(chart.meta.bureau.bureau,'Thổ ngũ Cục');
 assert.equal(chart.meta.menhPos,3);
@@ -16,7 +17,12 @@ assert.equal(chart.palaces[2].name,'Mệnh');
 assert.deepEqual(chart.palaces[2].stars.filter(s=>s.type==='main').map(s=>s.name).sort(),['Thái Âm','Thiên Cơ'].sort());
 assert.deepEqual(chart.palaces[6].stars.filter(s=>s.type==='main').map(s=>s.name),['Thiên Lương']);
 assert.deepEqual(chart.palaces[10].stars.filter(s=>s.type==='main').map(s=>s.name),['Thiên Đồng']);
-assert.equal(chart.palaces.reduce((n,p)=>n+p.stars.length,0)>=100,true);
+assert.equal(chart.palaces[2].stars.some(s=>s.name==='Hóa Kỵ'),true);
+assert.equal(chart.palaces[10].stars.some(s=>s.name==='Hóa Khoa'),true);
+assert.equal(chart.palaces[7].stars.some(s=>s.name==='Thiên Khôi'),true);
+assert.equal(chart.palaces[1].stars.some(s=>s.name==='Thiên Việt'),true);
+assert.deepEqual(chart.palaces.filter(p=>p.tuan).map(p=>p.branch),['Dần','Mão']);
+assert.deepEqual(chart.palaces.filter(p=>p.triet).map(p=>p.branch),['Ngọ','Mùi']);
+assert.equal(chart.palaces.reduce((n,p)=>n+p.stars.length,0),109);
 
 console.log('✓ Lịch âm và lá số mẫu Canh Tuất khớp bộ dữ liệu kiểm thử.');
-
