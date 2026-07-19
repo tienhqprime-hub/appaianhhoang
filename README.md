@@ -1,11 +1,25 @@
 # Mệnh Đồ AI
 
-Trang giới thiệu và bản demo luận giải vận trình cá nhân dành cho người Việt.
+Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt, theo nguyên tắc:
 
-## Nguyên tắc
+> Soi sáng, không gieo sợ hãi; không gây hại cho mình, người và muôn loài.
 
-Giúp người hiểu mình và sống tốt hơn; không gieo sợ hãi, thao túng hay gây hại cho mình, cho người và muôn loài.
+## Bộ máy hiện có
 
-## Triển khai
+- Đổi Dương lịch ↔ Âm lịch Việt Nam (UTC+7), hỗ trợ tháng nhuận.
+- Can Chi năm, tháng, ngày và giờ; ngũ hành nạp âm; Mệnh, Thân và Cục.
+- 12 cung, 14 chính tinh, các vòng sao và phụ tinh, Tứ Hóa, Tuần/Triệt.
+- Đại hạn và luận giải ngắn có nêu rõ cung/sao làm căn cứ.
+- Dữ liệu ngày sinh chỉ được xử lý trên thiết bị.
 
-Đây là website tĩnh, có thể triển khai trực tiếp trên Vercel mà không cần cấu hình build.
+## Chạy và kiểm thử
+
+Phải phục vụ qua HTTP vì JavaScript dùng ES module:
+
+```bash
+python3 -m http.server 8000
+node test-engine.mjs
+```
+
+Mở `http://localhost:8000` trong trình duyệt. Xem nguồn và giấy phép ở
+`THIRD_PARTY_NOTICES.md`.
