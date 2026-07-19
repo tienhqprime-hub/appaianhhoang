@@ -223,6 +223,7 @@ function render(chart, options={}){
   renderIdentity(chart); renderTopics();
   $('#technical-summary').innerHTML = `<strong>Dữ liệu kỹ thuật:</strong> Mệnh tại ${escapeHtml(palaces[meta.menhPos - 1].branch)}; Thân tại ${escapeHtml(palaces[meta.thanPos - 1].branch)}; ${escapeHtml(meta.bureau.bureau)}; ${escapeHtml(meta.napAm)}; Chủ Mệnh ${escapeHtml(meta.menhChu)}; Chủ Thân ${escapeHtml(meta.thanChu)}.`;
   $('#ket-qua').classList.add('visible');
+  document.body.classList.add('has-chart');
   selectPalace('Mệnh');
   const menhPalace = palaceByName('Mệnh');
   const menhStars = majorNames(menhPalace).join(' và ') || 'cấu trúc vô chính diệu';
@@ -286,6 +287,7 @@ function closeCompanion(){ $('#companion-card').hidden = true; $('#companion-lau
 
 function updateCompanionForChart(name){
   openCompanion({title:`${name}, lá số đã mở ✦`,copy:'Bây giờ bạn có thể chạm bất kỳ cung hoặc sao nào. Hoặc chọn một câu hỏi bên dưới.',actions:[{label:'Tôi nên xem gì trước?',palace:'Mệnh'},{label:'Công việc',palace:'Quan Lộc'},{label:'Tình cảm',palace:'Phu Thê'},{label:'Tiền bạc',palace:'Tài Bạch'}]});
+  closeCompanion();
 }
 
 function restoreSavedChart(){
@@ -340,7 +342,7 @@ $$('[data-preview-topic]').forEach(button => button.addEventListener('click',()=
   const topic=button.dataset.previewTopic;if(currentChart)selectPalace(topic,{scroll:true});else openCompanion({title:`Bạn đang hỏi về ${PALACE_META[topic].label.toLowerCase()}`,copy:`Để trả lời theo đúng lá số, mình cần ngày, giờ sinh và giới tính. Sau khi tính xong, mình sẽ mở thẳng cung ${topic}.`,actions:[{label:'Điền thông tin ngay',scroll:'la-so'}]});
 }));
 
-$('#save-chart').addEventListener('click',saveChart);$('#copy-summary').addEventListener('click',copySummary);$('#new-chart').addEventListener('click',()=>{$('#ket-qua').classList.remove('visible');currentChart=null;$('#la-so').reset();$('#leap-wrap').hidden=true;$('#la-so').scrollIntoView({behavior:'smooth',block:'start'});openCompanion({title:'Mình sẵn sàng cho lá số mới',copy:'Hãy chạm từng ô. Mình sẽ giải thích vì sao thông tin đó cần thiết.',actions:[]});});
+$('#save-chart').addEventListener('click',saveChart);$('#copy-summary').addEventListener('click',copySummary);$('#new-chart').addEventListener('click',()=>{$('#ket-qua').classList.remove('visible');document.body.classList.remove('has-chart');currentChart=null;$('#la-so').reset();$('#leap-wrap').hidden=true;$('#la-so').scrollIntoView({behavior:'smooth',block:'start'});openCompanion({title:'Mình sẵn sàng cho lá số mới',copy:'Hãy chạm từng ô. Mình sẽ giải thích vì sao thông tin đó cần thiết.',actions:[]});});
 $('#companion-launcher').addEventListener('click',()=>$('#companion-card').hidden?openCompanion(true):closeCompanion());$('#companion-close').addEventListener('click',closeCompanion);
 $$('[data-dialog]').forEach(button=>button.addEventListener('click',()=>openInfoDialog(button.dataset.dialog)));$('.dialog-close').addEventListener('click',()=>$('#info-dialog').close());$('#info-dialog').addEventListener('close',()=>document.body.classList.remove('dialog-open'));$('#info-dialog').addEventListener('click',event=>{if(event.target===$('#info-dialog'))$('#info-dialog').close();});
 
