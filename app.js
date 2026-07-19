@@ -1,90 +1,350 @@
 import { generateChart, parseBirthDate } from './tuvi-engine.js';
 
 const TRAITS = {
-  'Tử Vi':'khả năng quy tụ, tổ chức và giữ vai trò trung tâm',
-  'Thiên Cơ':'tư duy biến hóa, quan sát nhanh và thiên về giải pháp',
-  'Thái Dương':'tính công khai, chủ động, trách nhiệm và khuynh hướng dẫn dắt',
-  'Vũ Khúc':'tính thực tế, quyết đoán, kỷ luật và năng lực quản trị nguồn lực',
-  'Thiên Đồng':'sự mềm dẻo, thích nghi, nhân hòa và nhu cầu làm việc có ý nghĩa',
-  'Liêm Trinh':'ranh giới, nguyên tắc, sức hút và khả năng tự kiểm soát',
-  'Thiên Phủ':'khả năng gìn giữ, bao quát, ổn định và quản lý',
-  'Thái Âm':'chiều sâu nội tâm, sự tinh tế, tích lũy và trực giác',
-  'Tham Lang':'ham học hỏi, giao tiếp, trải nghiệm và sức sống mạnh',
-  'Cự Môn':'khả năng phản biện, ngôn ngữ và nhu cầu làm rõ điều chưa minh bạch',
-  'Thiên Tướng':'tinh thần bảo trợ, công bằng, hợp tác và giữ chuẩn mực',
-  'Thiên Lương':'khả năng che chở, suy xét dài hạn và trọng đạo lý',
-  'Thất Sát':'sự độc lập, chịu áp lực và quyết định trong tình thế khó',
-  'Phá Quân':'động lực cải tổ, phá khuôn và tái thiết sau biến động'
+  'Tử Vi':'khả năng quy tụ, tổ chức và giữ vai trò trung tâm','Thiên Cơ':'tư duy biến hóa, quan sát nhanh và thiên về giải pháp',
+  'Thái Dương':'tính công khai, chủ động, trách nhiệm và khuynh hướng dẫn dắt','Vũ Khúc':'tính thực tế, quyết đoán, kỷ luật và năng lực quản trị nguồn lực',
+  'Thiên Đồng':'sự mềm dẻo, thích nghi, nhân hòa và nhu cầu làm việc có ý nghĩa','Liêm Trinh':'ranh giới, nguyên tắc, sức hút và khả năng tự kiểm soát',
+  'Thiên Phủ':'khả năng gìn giữ, bao quát, ổn định và quản lý','Thái Âm':'chiều sâu nội tâm, sự tinh tế, tích lũy và trực giác',
+  'Tham Lang':'ham học hỏi, giao tiếp, trải nghiệm và sức sống mạnh','Cự Môn':'khả năng phản biện, ngôn ngữ và nhu cầu làm rõ điều chưa minh bạch',
+  'Thiên Tướng':'tinh thần bảo trợ, công bằng, hợp tác và giữ chuẩn mực','Thiên Lương':'khả năng che chở, suy xét dài hạn và trọng đạo lý',
+  'Thất Sát':'sự độc lập, chịu áp lực và quyết định trong tình thế khó','Phá Quân':'động lực cải tổ, phá khuôn và tái thiết sau biến động'
 };
 
-const $ = (s, root=document) => root.querySelector(s);
-const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const pad = n => String(n).padStart(2,'0');
+const PALACE_ORDER = ['Mệnh','Phụ Mẫu','Phúc Đức','Điền Trạch','Quan Lộc','Nô Bộc','Thiên Di','Tật Ách','Tài Bạch','Tử Tức','Phu Thê','Huynh Đệ'];
+const PALACE_META = {
+  'Mệnh':{icon:'✦',label:'Bản thân',focus:'cách bạn suy nghĩ, lựa chọn và hiện diện',intro:'Đây là điểm bắt đầu để hiểu khí chất, thế mạnh tự nhiên và cách bạn phản ứng trước cuộc sống.',questions:['Điều gì khiến bạn thấy mình đang sống đúng với bản chất nhất?','Thế mạnh nào bạn thường xem là bình thường nhưng người khác lại đánh giá cao?','Khi áp lực, bạn thường dựa vào lý trí, cảm xúc hay hành động?'],keywords:['bản thân','tính cách','điểm mạnh','tôi là ai']},
+  'Phụ Mẫu':{icon:'⌂',label:'Gốc gia đình',focus:'ảnh hưởng của người đi trước và cách bạn nhận sự nâng đỡ',intro:'Cung này soi vào quan hệ với cha mẹ, người nuôi dưỡng, cấp trên và dấu ấn gia đình trong cách bạn trưởng thành.',questions:['Bạn đang giữ điều gì từ gia đình mà vẫn còn hữu ích?','Ranh giới nào cần được nói rõ để gần nhau hơn?','Bạn tiếp nhận lời khuyên tốt nhất theo cách nào?'],keywords:['cha mẹ','gia đình','người lớn','cấp trên']},
+  'Phúc Đức':{icon:'∞',label:'Nội tâm',focus:'độ bền tinh thần, giá trị sâu và cảm giác đủ đầy',intro:'Cung Phúc Đức không đo may mắn; nó gợi cách bạn hồi phục, tìm ý nghĩa và xây nền tinh thần lâu dài.',questions:['Điều gì thực sự giúp bạn hồi phục sau một tuần khó?','Giá trị nào bạn muốn giữ dù hoàn cảnh thay đổi?','Bạn có đang dành đủ khoảng lặng cho mình không?'],keywords:['tinh thần','nội tâm','phúc','bình an']},
+  'Điền Trạch':{icon:'⌑',label:'Không gian sống',focus:'nhà cửa, nơi chốn và nền tảng vật chất',intro:'Cung này gợi cách bạn tạo cảm giác an cư, quản lý không gian sống và xây nền tảng bền vững.',questions:['Không gian hiện tại có nâng đỡ nhịp sống của bạn không?','Điều gì cần đơn giản hóa trong nhà hoặc tài sản?','Nền tảng nào cần xây trước khi mở rộng?'],keywords:['nhà cửa','bất động sản','nơi ở','điền']},
+  'Quan Lộc':{icon:'↗',label:'Sự nghiệp',focus:'cách làm việc, trách nhiệm và hướng tạo giá trị',intro:'Đây là cung chính để đọc nghề nghiệp và vai trò xã hội — không phải tên một nghề cố định, mà là cách bạn làm tốt nhất.',questions:['Công việc nào cho phép bạn dùng đúng thế mạnh tự nhiên?','Bạn muốn được nhớ đến vì giá trị nào trong công việc?','Bước nghề nghiệp tiếp theo cần thêm năng lực hay thêm can đảm?'],keywords:['công việc','sự nghiệp','nghề','thăng tiến','kinh doanh']},
+  'Nô Bộc':{icon:'⌁',label:'Cộng sự',focus:'bạn bè, đồng đội và chất lượng hợp tác',intro:'Cung Nô Bộc gợi kiểu người bạn dễ cộng tác, cách xây niềm tin và ranh giới trong các mối quan hệ ngang hàng.',questions:['Bạn đang ở trong nhóm giúp mình tiến lên hay tiêu hao?','Bạn cần nói rõ kỳ vọng nào với cộng sự?','Mối quan hệ nào đáng được đầu tư lâu dài?'],keywords:['bạn bè','đồng nghiệp','cộng sự','quan hệ']},
+  'Thiên Di':{icon:'⇢',label:'Thế giới bên ngoài',focus:'môi trường mới, di chuyển và hình ảnh khi bước ra ngoài',intro:'Cung này cho thấy bạn vận hành thế nào khi rời vùng quen thuộc, gặp người lạ hoặc thay đổi môi trường.',questions:['Môi trường nào làm bạn trở nên chủ động hơn?','Bạn cần chuẩn bị gì trước một thay đổi lớn?','Hình ảnh bên ngoài có phản ánh đúng con người bên trong?'],keywords:['đi xa','xuất ngoại','môi trường','thay đổi','thiên di']},
+  'Tật Ách':{icon:'○',label:'Nhịp sống',focus:'thói quen, áp lực và cách giữ cân bằng',intro:'Đây là phần soi chiếu nhịp sống và cách cơ thể–tinh thần phản ứng với áp lực; không phải chẩn đoán sức khỏe.',questions:['Dấu hiệu nào thường báo bạn đang quá tải?','Thói quen nhỏ nào có thể giúp nhịp sống ổn định hơn?','Bạn đang cố chịu đựng điều gì thay vì xin hỗ trợ?'],keywords:['sức khỏe','áp lực','mệt','cân bằng','tật ách']},
+  'Tài Bạch':{icon:'◎',label:'Tài chính',focus:'cách tạo, giữ và sử dụng nguồn lực',intro:'Cung Tài Bạch gợi thói quen tiền bạc và năng lực quản trị nguồn lực, không cam kết lợi nhuận hay dự đoán khoản tiền cụ thể.',questions:['Bạn kiếm tiền tốt nhất khi giải quyết loại vấn đề nào?','Khoản chi nào đang phản ánh đúng giá trị của bạn?','Quy tắc tài chính nào giúp bạn bớt quyết định theo cảm xúc?'],keywords:['tiền','tài chính','tài vận','thu nhập','đầu tư']},
+  'Tử Tức':{icon:'◇',label:'Sáng tạo & con trẻ',focus:'sự tiếp nối, nuôi dưỡng và điều bạn tạo ra',intro:'Ngoài chủ đề con cái, cung này còn gợi cách bạn chăm sóc ý tưởng, dự án và những điều sẽ tiếp tục sau mình.',questions:['Điều gì bạn muốn nuôi lớn trong vài năm tới?','Bạn chăm sóc người khác mà có quên chăm sóc mình không?','Dự án nào cần kiên nhẫn thay vì thúc ép?'],keywords:['con cái','sáng tạo','dự án','nuôi dưỡng']},
+  'Phu Thê':{icon:'♥',label:'Tình cảm',focus:'cách kết nối, cam kết và học qua quan hệ gần gũi',intro:'Cung Phu Thê gợi nhu cầu trong quan hệ và cách xây sự đồng hành; không quyết định ai là “định mệnh” của bạn.',questions:['Bạn cần cảm thấy điều gì để thật sự an toàn trong quan hệ?','Nhu cầu nào nên được nói thẳng thay vì chờ đối phương đoán?','Bạn đang lặp lại mẫu quan hệ nào?'],keywords:['tình cảm','tình yêu','hôn nhân','vợ chồng','đối tác']},
+  'Huynh Đệ':{icon:'≋',label:'Anh chị em',focus:'quan hệ cùng thế hệ và cách chia sẻ nguồn lực',intro:'Cung này soi vào anh chị em, người thân ngang vai và bài học về so sánh, hỗ trợ, cạnh tranh lành mạnh.',questions:['Bạn cần chủ động kết nối lại với ai?','Sự so sánh nào không còn phục vụ mình?','Bạn có thể hỗ trợ mà không gánh thay bằng cách nào?'],keywords:['anh em','chị em','người thân']}
+};
 
-function majorNames(palace){ return palace.stars.filter(s=>s.type==='main').map(s=>s.name); }
-function explainPalace(palace){
-  const majors=majorNames(palace);
-  if(!majors.length)return 'Cung này vô chính diệu: cần đọc cùng đối cung và tam phương, vì vậy hệ thống không kết luận chỉ từ riêng cung này.';
-  const traits=majors.map(s=>TRAITS[s]).filter(Boolean);
-  const support=palace.stars.filter(s=>s.type==='support').slice(0,4).map(s=>s.name);
-  const challenge=palace.stars.filter(s=>s.type==='challenge').slice(0,3).map(s=>s.name);
-  let text=`${majors.join(' và ')} nhấn mạnh ${traits.join('; ')}.`;
-  if(support.length)text+=` Các sao hỗ trợ nổi bật: ${support.join(', ')}.`;
-  if(challenge.length)text+=` Điểm cần quan sát tỉnh táo: ${challenge.join(', ')}; đây là tín hiệu để điều chỉnh, không phải phán quyết.`;
-  return text;
+const FIELD_GUIDE = {
+  calendar:'Bạn đang dùng ngày trên giấy tờ theo Dương lịch hay ngày Âm lịch gia đình ghi lại? Chọn đúng loại để phép đổi lịch không bị lặp.',
+  birth:'Ngày sinh là tọa độ đầu tiên để tính âm lịch, Can Chi ngày và vị trí nhiều vòng sao.',
+  time:'Giờ sinh chia theo 12 thời thần. Nếu ở sát mốc hai giờ, hãy kiểm tra lại vì cung Mệnh và cung Thân có thể thay đổi.',
+  gender:'Thông tin này chỉ dùng để xác định chiều đi thuận hoặc nghịch của các chu kỳ truyền thống.',
+  place:'Phiên bản hiện tại tính theo múi giờ Việt Nam UTC+7. Nơi sinh được giữ như ghi chú để bạn nhận diện hồ sơ.',
+  name:'Tên chỉ dùng để xưng hô trong phần kết quả. Bạn có thể để trống và hệ thống sẽ gọi là “Bạn”.'
+};
+
+const DIALOGS = {
+  terms:{kicker:'Điều khoản sử dụng',title:'Một công cụ để soi chiếu, không quyết định thay bạn.',body:'<p>Mệnh Đồ AI cung cấp nội dung diễn giải truyền thống nhằm mục đích tham khảo và tự khám phá. Bạn chịu trách nhiệm với mọi quyết định của mình.</p><h3>Giới hạn rõ ràng</h3><p>Không dùng nội dung trên trang để thay thế chuyên gia y tế, pháp lý, tài chính hoặc tư vấn tâm lý. Hệ thống không cam kết dự đoán sự kiện tương lai.</p>'},
+  privacy:{kicker:'Bảo mật',title:'Ngày sinh được xử lý ngay trên thiết bị.',body:'<p>Bản hiện tại không gửi dữ liệu biểu mẫu lên máy chủ. Phép tính lá số và phần giải nghĩa chạy trong trình duyệt.</p><h3>Khi bạn bấm “Lưu trên thiết bị”</h3><p>Một bản thông tin đầu vào được lưu trong bộ nhớ của chính trình duyệt đó. Bạn có thể xóa bằng cách xóa dữ liệu trang hoặc lập lá số mới mà không lưu.</p>'},
+  about:{kicker:'Về Mệnh Đồ',title:'Soi sáng, không gieo sợ hãi.',body:'<p>Mệnh Đồ kết hợp phép an sao Tử Vi Đẩu Số với một lớp giải nghĩa tương tác. Mỗi nhận định phải nêu được cung và sao làm căn cứ.</p><h3>Nguyên tắc</h3><p>Không dọa nạt, không khẳng định định mệnh, không thao túng và không gây hại cho mình, người khác hay muôn loài.</p>'}
+};
+
+const $ = (selector, root=document) => root.querySelector(selector);
+const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const pad = value => String(value).padStart(2,'0');
+let currentChart = null;
+let currentPalaceIndex = 0;
+let toastTimer;
+
+function majorNames(palace){ return palace.stars.filter(star => star.type === 'main').map(star => star.name); }
+function starNames(palace, type){ return palace.stars.filter(star => star.type === type).map(star => star.name); }
+function palaceByName(name){ return currentChart?.palaces.find(palace => palace.name === name); }
+function strengthLabel(value){ return ({M:'Miếu',V:'Vượng',Đ:'Đắc',B:'Bình',H:'Hãm'})[value] || '' ; }
+
+function supportMeaning(name){
+  if (['Văn Xương','Văn Khúc','Hóa Khoa','Thiên Khôi','Thiên Việt','Văn Tinh'].includes(name)) return 'khả năng học, diễn đạt hoặc được nhìn nhận bằng năng lực';
+  if (['Lộc Tồn','Hóa Lộc','Quốc Ấn','Đường Phù'].includes(name)) return 'ý thức xây nguồn lực, uy tín và nền tảng';
+  if (['Tả Phù','Hữu Bật','Thiên Quan','Thiên Phúc','Ân Quang','Thiên Quý'].includes(name)) return 'sự hỗ trợ, kết nối và cơ hội nhận đúng người đồng hành';
+  if (['Hồng Loan','Thiên Hỷ','Đào Hoa'].includes(name)) return 'độ mở cảm xúc, duyên kết nối và khả năng tạo thiện cảm';
+  if (['Thiên Mã','Thanh Long'].includes(name)) return 'động lực dịch chuyển, học qua trải nghiệm và thay đổi môi trường';
+  if (['Hóa Quyền','Lực Sĩ','Tướng Quân'].includes(name)) return 'khả năng chủ động, đảm nhiệm và tạo ảnh hưởng';
+  return 'một nguồn lực phụ trợ cần được dùng đúng hoàn cảnh';
+}
+
+function challengeMeaning(name){
+  if (name === 'Hóa Kỵ') return 'dễ suy nghĩ nhiều hoặc vướng ở điều chưa nói rõ; nên kiểm chứng trước khi kết luận';
+  if (['Kình Dương','Đà La','Thiên Hình'].includes(name)) return 'ma sát, sự cứng hoặc áp lực phải quyết nhanh; nên thêm khoảng dừng';
+  if (['Địa Không','Địa Kiếp','Thiên Không'].includes(name)) return 'biến động và kỳ vọng thay đổi; nên chuẩn bị phương án linh hoạt';
+  if (['Hỏa Tinh','Linh Tinh','Phi Liêm'].includes(name)) return 'nhịp phản ứng nhanh; nên phân biệt trực giác với bốc đồng';
+  if (['Cô Thần','Quả Tú'].includes(name)) return 'xu hướng tự gánh hoặc thu mình; nên chủ động tạo kênh trao đổi an toàn';
+  if (['Tiểu Hao','Đại Hao'].includes(name)) return 'nguồn lực dễ phân tán; nên đặt giới hạn và theo dõi đều đặn';
+  return 'một điểm ma sát để quan sát và điều chỉnh, không phải phán quyết xấu';
+}
+
+function starExplanation(star, palace){
+  const meta = PALACE_META[palace.name];
+  const level = strengthLabel(star.strength);
+  if (star.type === 'main') {
+    const trait = TRAITS[star.name] || 'một sắc thái chủ đạo';
+    return `${star.name}${level ? ` ở trạng thái ${level}` : ''} là chính tinh trong cung ${palace.name}. Sao này đưa ${trait} vào ${meta.focus}. Đây là một khuynh hướng để quan sát, không phải nhãn cố định về con người.`;
+  }
+  if (star.type === 'support') return `${star.name} là sao hỗ trợ tại cung ${palace.name}, gợi ${supportMeaning(star.name)} trong chủ đề ${meta.label.toLowerCase()}. Hiệu quả rõ nhất khi được chuyển thành thói quen hoặc hành động cụ thể.`;
+  if (star.type === 'challenge') return `${star.name} tại cung ${palace.name} gợi rằng bạn nên chú ý: ${challengeMeaning(star.name)}. Hệ thống xem đây là tín hiệu quản trị rủi ro, không dùng để gieo sợ hãi.`;
+  return `${star.name} mô tả một nhịp phát triển trong cung ${palace.name}. Nên đọc cùng chính tinh và toàn bộ cấu trúc cung.`;
+}
+
+function analyzePalace(palace){
+  const meta = PALACE_META[palace.name];
+  const majors = palace.stars.filter(star => star.type === 'main');
+  const supports = palace.stars.filter(star => star.type === 'support');
+  const challenges = palace.stars.filter(star => star.type === 'challenge');
+  const names = majors.map(star => star.name);
+  const traits = majors.map(star => TRAITS[star.name]).filter(Boolean);
+  const headline = names.length ? `${names.join(' · ')} đặt trọng tâm vào ${meta.label.toLowerCase()}` : `${meta.label}: cần đọc qua liên kết với các cung đối chiếu`;
+  let copy = meta.intro;
+  if (traits.length) copy += ` Với ${names.join(' và ')}, cách biểu hiện nổi bật là ${traits.join('; ')}.`;
+  else copy += ' Cung này vô chính diệu, vì vậy không nên kết luận riêng lẻ; cần đọc cùng đối cung, tam phương và các sao phụ.';
+  if (palace.body) copy += ' Cung này đồng thời có Thân cư, nên chủ đề thường trở nên rõ hơn qua lựa chọn và trải nghiệm trưởng thành.';
+  const support = supports.length ? supports.slice(0,3).map(star => `${star.name}: ${supportMeaning(star.name)}`) : ['Không có sao hỗ trợ nổi bật riêng; hãy nhìn vào chính tinh và liên kết cung.'];
+  const watch = challenges.length ? challenges.slice(0,3).map(star => `${star.name}: ${challengeMeaning(star.name)}`) : ['Không có điểm ma sát nổi bật trong nhóm sao đang xét; vẫn cần đối chiếu hoàn cảnh thực tế.'];
+  const evidence = `Căn cứ: cung ${palace.name} tại ${palace.branch}${palace.body ? ', có Thân cư' : ''}; ${names.length ? `chính tinh ${names.join(', ')}` : 'vô chính diệu'}; ${supports.length} sao hỗ trợ; ${challenges.length} điểm cần lưu ý; đại hạn ${palace.majorAge}–${palace.majorAge + 9}.`;
+  return {meta, headline, copy, support, watch, evidence};
 }
 
 function starMarkup(star){
-  const strength=star.strength?` <small>${star.strength}</small>`:'';
-  return `<span class="star star-${star.type}">${escapeHtml(star.name)}${strength}</span>`;
+  const strength = star.strength ? ` <small>${star.strength}</small>` : '';
+  return `<button type="button" class="star star-${star.type}" data-star="${escapeHtml(star.name)}" title="Chạm để hiểu sao ${escapeHtml(star.name)}">${escapeHtml(star.name)}${strength}</button>`;
 }
 
-function palaceMarkup(p){
-  const majors=p.stars.filter(s=>s.type==='main');
-  const support=p.stars.filter(s=>s.type==='support');
-  const challenge=p.stars.filter(s=>s.type==='challenge');
-  const stage=p.stars.find(s=>s.type==='stage');
-  return `<article class="palace palace-${p.position}" data-pos="${p.position}">
-    <header><div><strong>${escapeHtml(p.name)}</strong>${p.body?'<b class="body-mark">Thân</b>':''}</div><span>${escapeHtml(p.branch)} · ${escapeHtml(p.element)}</span></header>
-    <div class="major-stars">${majors.length?majors.map(starMarkup).join(''):'<span class="empty-major">Vô chính diệu</span>'}</div>
+function palaceMarkup(palace){
+  const majors = palace.stars.filter(star => star.type === 'main');
+  const support = palace.stars.filter(star => star.type === 'support');
+  const challenge = palace.stars.filter(star => star.type === 'challenge');
+  const stage = palace.stars.find(star => star.type === 'stage');
+  return `<article class="palace palace-${palace.position}" data-pos="${palace.position}" data-name="${escapeHtml(palace.name)}" role="button" tabindex="0" aria-label="Cung ${escapeHtml(palace.name)} tại ${escapeHtml(palace.branch)}. Chạm để đọc chi tiết.">
+    <header><div><strong>${escapeHtml(palace.name)}</strong>${palace.body ? '<b class="body-mark">Thân</b>' : ''}</div><span>${escapeHtml(palace.branch)} · ${escapeHtml(palace.element)}</span></header>
+    <div class="major-stars">${majors.length ? majors.map(starMarkup).join('') : '<span class="empty-major">Vô chính diệu</span>'}</div>
     <div class="minor-stars">${support.map(starMarkup).join('')}${challenge.map(starMarkup).join('')}</div>
-    <footer><span>${stage?escapeHtml(stage.name):''}</span><span>Đại hạn ${p.majorAge}–${p.majorAge+9}</span></footer>
-    ${(p.tuan||p.triet)?`<div class="void-mark">${p.tuan?'TUẦN ':''}${p.triet?'TRIỆT':''}</div>`:''}
+    <footer><span>${stage ? escapeHtml(stage.name) : ''}</span><span>Đại hạn ${palace.majorAge}–${palace.majorAge + 9}</span></footer>
+    ${(palace.tuan || palace.triet) ? `<div class="void-mark">${palace.tuan ? 'TUẦN ' : ''}${palace.triet ? 'TRIỆT' : ''}</div>` : ''}
   </article>`;
 }
 
-function render(chart){
-  const {meta,input,palaces}=chart;
-  const name=input.name?.trim()||'Bạn';
-  const solar=input.solar,lunar=input.lunar;
-  const center=`<div class="chart-center"><span class="seal">M</span><p>LÁ SỐ TỬ VI ĐẨU SỐ</p><h3>${escapeHtml(name)}</h3>
-    <dl><div><dt>Dương lịch</dt><dd>${pad(solar.day)}/${pad(solar.month)}/${solar.year} · ${pad(input.hour)}:${pad(input.minute)}</dd></div>
-    <div><dt>Âm lịch</dt><dd>${pad(lunar.day)}/${pad(lunar.month)}/${lunar.year}${lunar.leap?' nhuận':''}</dd></div>
+function centerMarkup(chart){
+  const {meta,input} = chart;
+  const name = input.name?.trim() || 'Bạn';
+  const solar = input.solar, lunar = input.lunar;
+  return `<div class="chart-center"><span class="seal">M</span><p>LÁ SỐ TỬ VI ĐẨU SỐ</p><h3>${escapeHtml(name)}</h3><dl>
+    <div><dt>Dương lịch</dt><dd>${pad(solar.day)}/${pad(solar.month)}/${solar.year} · ${pad(input.hour)}:${pad(input.minute)}</dd></div>
+    <div><dt>Âm lịch</dt><dd>${pad(lunar.day)}/${pad(lunar.month)}/${lunar.year}${lunar.leap ? ' nhuận' : ''}</dd></div>
     <div><dt>Tứ trụ</dt><dd>${meta.yearName} · ${meta.monthName} · ${meta.dayName} · ${meta.hourName}</dd></div>
     <div><dt>Mệnh / Cục</dt><dd>${meta.napAm} · ${meta.bureau.bureau}</dd></div>
-    <div><dt>Chủ Mệnh / Chủ Thân</dt><dd>${meta.menhChu} · ${meta.thanChu}</dd></div></dl>
+    <div><dt>Chủ Mệnh / Thân</dt><dd>${meta.menhChu} · ${meta.thanChu}</dd></div></dl>
     <p class="chart-note">${meta.relation} · Đại hạn đi ${meta.direction.toLowerCase()}</p></div>`;
-  $('#chart-grid').innerHTML=palaces.map(palaceMarkup).join('')+center;
-  $('#result-title').textContent=`Lá số của ${name}`;
-  $('#result-subtitle').textContent=`Dương lịch ${pad(solar.day)}/${pad(solar.month)}/${solar.year} · Âm lịch ${pad(lunar.day)}/${pad(lunar.month)}/${lunar.year}${lunar.leap?' nhuận':''} · giờ ${meta.hourName}`;
-  const wanted=['Mệnh','Quan Lộc','Tài Bạch','Phu Thê'];
-  $('#reading-grid').innerHTML=wanted.map(label=>{const p=palaces.find(x=>x.name===label);return `<article><span>${label}</span><strong>${majorNames(p).join(' · ')||'Vô chính diệu'}</strong><p>${escapeHtml(explainPalace(p))}</p><small>Căn cứ: cung ${p.branch}${p.body?' (Thân cư)':''}, ${p.stars.length} sao được an.</small></article>`}).join('');
-  $('#technical-summary').innerHTML=`<strong>Dữ liệu kỹ thuật:</strong> Mệnh tại ${meta.menhPos&&palaces[meta.menhPos-1].branch}; Thân tại ${palaces[meta.thanPos-1].branch}; ${meta.bureau.bureau}; ${meta.napAm}; Chủ Mệnh ${meta.menhChu}; Chủ Thân ${meta.thanChu}.`;
-  const result=$('#ket-qua');result.classList.add('visible');setTimeout(()=>result.scrollIntoView({behavior:'smooth',block:'start'}),60);
 }
 
-const form=$('#la-so');
-$('#calendar-type').addEventListener('change',e=>{$('#leap-wrap').hidden=e.target.value!=='lunar'});
-form.addEventListener('submit',e=>{
-  e.preventDefault();
-  const error=$('#form-error');error.textContent='';
-  try{
-    const date=parseBirthDate($('#birth').value);
-    const [hour,minute]=$('#birth-time').value.split(':').map(Number);
-    if(!Number.isInteger(hour)||!Number.isInteger(minute))throw new Error('Vui lòng chọn giờ sinh.');
-    const gender=$('#gender').value;if(!gender)throw new Error('Vui lòng chọn giới tính dùng để an thuận/nghịch.');
-    const chart=generateChart({...date,hour,minute,gender,name:$('#name').value,place:$('#birth-place').value.trim(),isLunar:$('#calendar-type').value==='lunar',leap:$('#lunar-leap').checked});
-    render(chart);
-  }catch(err){error.textContent=err.message||'Thông tin chưa hợp lệ.';error.scrollIntoView({behavior:'smooth',block:'center'});}
+function renderIdentity(chart){
+  const {meta,palaces} = chart;
+  const menh = palaces[meta.menhPos - 1];
+  const than = palaces[meta.thanPos - 1];
+  const items = [['Năm sinh',meta.yearName],['Mệnh',`${meta.napAm} · ${menh.branch}`],['Thân',`${than.name} · ${than.branch}`],['Cục',meta.bureau.bureau],['Chủ Mệnh / Thân',`${meta.menhChu} · ${meta.thanChu}`]];
+  $('#identity-strip').innerHTML = items.map(([label,value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+}
+
+function renderTopics(){
+  $('#topic-grid').innerHTML = PALACE_ORDER.map((name,index) => {
+    const palace = palaceByName(name), meta = PALACE_META[name], majors = majorNames(palace).join(' · ') || 'Vô chính diệu';
+    return `<button type="button" class="topic-card" data-topic="${escapeHtml(name)}"><div><span>${String(index + 1).padStart(2,'0')} · ${escapeHtml(meta.label)}</span><strong>${escapeHtml(name)}</strong><p>${escapeHtml(majors)}</p></div><b>Đọc cung này →</b></button>`;
+  }).join('');
+}
+
+function setGuide({eyebrow,title,copy,actions=[],basis}){
+  $('#guide-eyebrow').textContent = eyebrow;
+  $('#guide-title').textContent = title;
+  $('#guide-copy').textContent = copy;
+  $('#guide-basis').textContent = basis || 'Mỗi câu trả lời đều ghi rõ cung và sao làm căn cứ.';
+  const wrap = $('#guide-actions'); wrap.innerHTML = '';
+  actions.forEach(action => {
+    const button = document.createElement('button'); button.type = 'button'; button.textContent = action.label;
+    if (action.palace) button.dataset.palace = action.palace;
+    if (action.star) { button.dataset.star = action.star; button.dataset.pos = String(action.pos); }
+    if (action.scroll) button.dataset.scroll = action.scroll;
+    wrap.append(button);
+  });
+}
+
+function selectPalace(name, options={}){
+  if (!currentChart || !PALACE_ORDER.includes(name)) return;
+  currentPalaceIndex = PALACE_ORDER.indexOf(name);
+  const palace = palaceByName(name), analysis = analyzePalace(palace);
+  $$('.palace').forEach(card => card.classList.toggle('selected', card.dataset.name === name));
+  $$('.topic-card').forEach(card => card.classList.toggle('active', card.dataset.topic === name));
+  $('#focus-kicker').textContent = `${String(currentPalaceIndex + 1).padStart(2,'0')} · ${analysis.meta.label}`;
+  $('#focus-title').textContent = `Cung ${name} — ${analysis.meta.focus}`;
+  $('#focus-headline').textContent = analysis.headline;
+  $('#focus-copy').textContent = analysis.copy;
+  $('#focus-support').innerHTML = analysis.support.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  $('#focus-watch').innerHTML = analysis.watch.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  $('#focus-questions').innerHTML = analysis.meta.questions.map(question => `<li>${escapeHtml(question)}</li>`).join('');
+  $('#focus-evidence').textContent = analysis.evidence;
+  $('#focus-position').textContent = `${String(currentPalaceIndex + 1).padStart(2,'0')} / 12`;
+  const related = PALACE_ORDER.filter(item => item !== name).slice(Math.max(0,currentPalaceIndex - 1),Math.max(0,currentPalaceIndex - 1) + 3).slice(0,2);
+  setGuide({eyebrow:`Đang đọc cung ${name}`,title:analysis.headline,copy:analysis.copy,actions:[...related.map(palaceName => ({label:`Xem ${PALACE_META[palaceName].label}`,palace:palaceName})),{label:'Đến phần đọc sâu',scroll:'deep-dive'}],basis:analysis.evidence});
+  if (options.scroll) $('#deep-dive').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showStar(starName, position){
+  if (!currentChart) return;
+  const palace = currentChart.palaces.find(item => item.position === Number(position));
+  const star = palace?.stars.find(item => item.name === starName);
+  if (!palace || !star) return;
+  selectPalace(palace.name);
+  const siblings = palace.stars.filter(item => item.type === 'main' && item.name !== starName).slice(0,2);
+  setGuide({eyebrow:`Giải nghĩa ${star.type === 'main' ? 'chính tinh' : 'sao'} · cung ${palace.name}`,title:`${star.name}${star.strength ? ` (${strengthLabel(star.strength)})` : ''}`,copy:starExplanation(star,palace),actions:[{label:`Đọc toàn bộ cung ${palace.name}`,palace:palace.name},...siblings.map(item => ({label:`Hiểu ${item.name}`,star:item.name,pos:palace.position}))],basis:`Vị trí thật trên lá số: ${star.name} tại cung ${palace.name} (${palace.branch})${star.strength ? `, trạng thái ${strengthLabel(star.strength)}` : ''}.`});
+  $('#guide-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function topicFromQuery(raw){
+  const query = String(raw || '').trim().toLowerCase();
+  if (!query) return null;
+  return PALACE_ORDER.find(name => PALACE_META[name].keywords.some(keyword => query.includes(keyword))) || null;
+}
+
+function askGuide(query){
+  const topic = topicFromQuery(query);
+  if (!currentChart) {
+    openCompanion({title:'Mình cần lá số trước',copy:topic ? `Để đọc ${PALACE_META[topic].label.toLowerCase()}, hãy điền 5 thông tin sinh. Sau đó mình sẽ dẫn bạn đến đúng cung.` : 'Hãy lập lá số trước. Sau đó bạn có thể hỏi bằng lời thường như “công việc”, “tình cảm” hoặc “tiền bạc”.',actions:[{label:'Điền thông tin ngay',scroll:'la-so'}]});
+    return;
+  }
+  if (topic) { selectPalace(topic,{scroll:true}); showToast(`Đã mở cung ${topic} cho câu hỏi của bạn.`); return; }
+  setGuide({eyebrow:'Mình chưa chắc bạn đang hỏi chủ đề nào',title:'Chọn một hướng gần nhất nhé.',copy:'Bạn có thể nói ngắn gọn: công việc, tiền bạc, tình yêu, gia đình, sức khỏe, đi xa hoặc bản thân.',actions:['Quan Lộc','Tài Bạch','Phu Thê','Mệnh'].map(name => ({label:PALACE_META[name].label,palace:name})),basis:'Mệnh Đồ chỉ chuyển câu hỏi đến đúng cung; không tự bịa thêm dữ liệu ngoài lá số.'});
+}
+
+function render(chart, options={}){
+  currentChart = chart;
+  const {meta,input,palaces} = chart;
+  const name = input.name?.trim() || 'Bạn', solar = input.solar, lunar = input.lunar;
+  $('#chart-grid').innerHTML = palaces.map(palaceMarkup).join('') + centerMarkup(chart);
+  $('#result-title').textContent = `Chào ${name}, đây là bản đồ của bạn.`;
+  $('#result-subtitle').textContent = `Dương lịch ${pad(solar.day)}/${pad(solar.month)}/${solar.year} · Âm lịch ${pad(lunar.day)}/${pad(lunar.month)}/${lunar.year}${lunar.leap ? ' nhuận' : ''} · giờ ${meta.hourName}`;
+  renderIdentity(chart); renderTopics();
+  $('#technical-summary').innerHTML = `<strong>Dữ liệu kỹ thuật:</strong> Mệnh tại ${escapeHtml(palaces[meta.menhPos - 1].branch)}; Thân tại ${escapeHtml(palaces[meta.thanPos - 1].branch)}; ${escapeHtml(meta.bureau.bureau)}; ${escapeHtml(meta.napAm)}; Chủ Mệnh ${escapeHtml(meta.menhChu)}; Chủ Thân ${escapeHtml(meta.thanChu)}.`;
+  $('#ket-qua').classList.add('visible');
+  selectPalace('Mệnh');
+  const menhPalace = palaceByName('Mệnh');
+  const menhStars = majorNames(menhPalace).join(' và ') || 'cấu trúc vô chính diệu';
+  setGuide({eyebrow:'Lá số đã sẵn sàng',title:`Chào ${name}, mình khuyên bắt đầu từ cung Mệnh.`,copy:`Cung Mệnh của bạn có ${menhStars}. Sau đó hãy xem cung có Thân cư để hiểu chủ đề càng rõ khi trưởng thành.`,actions:[{label:'Đọc cung Mệnh',palace:'Mệnh'},{label:`Xem Thân cư ${palaces[meta.thanPos - 1].name}`,palace:palaces[meta.thanPos - 1].name},{label:'Hỏi về công việc',palace:'Quan Lộc'}],basis:`Căn cứ mở đầu: Mệnh tại ${menhPalace.branch}; Thân tại cung ${palaces[meta.thanPos - 1].name} (${palaces[meta.thanPos - 1].branch}).`});
+  updateCompanionForChart(name);
+  if (!options.silent) setTimeout(() => $('#ket-qua').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function chartInputFromForm(){
+  const date = parseBirthDate($('#birth').value);
+  const [hour,minute] = $('#birth-time').value.split(':').map(Number);
+  if (!Number.isInteger(hour) || !Number.isInteger(minute)) throw new Error('Vui lòng chọn giờ sinh.');
+  const gender = $('#gender').value;
+  if (!gender) throw new Error('Vui lòng chọn giới tính dùng để an thuận/nghịch.');
+  const place = $('#birth-place').value.trim();
+  if (!place) throw new Error('Vui lòng nhập nơi sinh để hoàn thiện hồ sơ.');
+  return {...date,hour,minute,gender,name:$('#name').value.trim(),place,isLunar:$('#calendar-type').value === 'lunar',leap:$('#lunar-leap').checked};
+}
+
+function summaryText(){
+  if (!currentChart) return '';
+  const {input,meta,palaces} = currentChart, name = input.name?.trim() || 'Bạn';
+  const lines = [`MỆNH ĐỒ AI — LÁ SỐ CỦA ${name.toUpperCase()}`,`Dương lịch: ${pad(input.solar.day)}/${pad(input.solar.month)}/${input.solar.year} ${pad(input.hour)}:${pad(input.minute)}`,`Âm lịch: ${pad(input.lunar.day)}/${pad(input.lunar.month)}/${input.lunar.year}${input.lunar.leap ? ' nhuận' : ''}`,`Tứ trụ: ${meta.yearName} · ${meta.monthName} · ${meta.dayName} · ${meta.hourName}`,`Mệnh/Cục: ${meta.napAm} · ${meta.bureau.bureau}`,''];
+  ['Mệnh','Quan Lộc','Tài Bạch','Phu Thê'].forEach(name => { const palace = palaces.find(item => item.name === name); lines.push(`${name}: ${majorNames(palace).join(' · ') || 'Vô chính diệu'} — ${PALACE_META[name].intro}`); });
+  lines.push('','Nội dung mang tính tham khảo và tự soi chiếu, không phải lời tiên đoán.');
+  return lines.join('\n');
+}
+
+function saveChart(){
+  if (!currentChart) return;
+  const {input} = currentChart;
+  const data = {day:input.day,month:input.month,year:input.year,hour:input.hour,minute:input.minute,gender:input.gender,name:input.name,place:input.place,isLunar:input.isLunar,leap:input.leap};
+  localStorage.setItem('menhdo:chart:v2',JSON.stringify(data));
+  showToast('Đã lưu lá số trong trình duyệt này.');
+  openCompanion({title:'Đã cất lá số cho bạn',copy:'Lần sau mở trang, bạn có thể tiếp tục từ lá số đã lưu trên chính thiết bị này.',actions:[{label:'Tiếp tục đọc cung Mệnh',palace:'Mệnh'}]});
+}
+
+async function copySummary(){
+  const text = summaryText();
+  try { await navigator.clipboard.writeText(text); showToast('Đã sao chép phần tóm tắt.'); }
+  catch { const area=document.createElement('textarea'); area.value=text; area.style.position='fixed'; area.style.opacity='0'; document.body.append(area); area.select(); document.execCommand('copy'); area.remove(); showToast('Đã sao chép phần tóm tắt.'); }
+}
+
+function showToast(message){
+  const toast = $('#toast'); toast.textContent = message; toast.classList.add('visible');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('visible'),2600);
+}
+
+function openCompanion(config){
+  if (config === true) config = {};
+  const card = $('#companion-card'); card.hidden = false; $('#companion-launcher').setAttribute('aria-expanded','true');
+  if (config?.title) $('#companion-title').textContent = config.title;
+  if (config?.copy) $('#companion-copy').textContent = config.copy;
+  if (config?.actions) {
+    const wrap = $('#companion-actions'); wrap.innerHTML='';
+    config.actions.forEach(action => { const button=document.createElement('button'); button.type='button'; button.textContent=action.label; if(action.palace)button.dataset.palace=action.palace;if(action.scroll)button.dataset.scroll=action.scroll;if(action.restore)button.dataset.restore='true';wrap.append(button); });
+  }
+}
+
+function closeCompanion(){ $('#companion-card').hidden = true; $('#companion-launcher').setAttribute('aria-expanded','false'); }
+
+function updateCompanionForChart(name){
+  openCompanion({title:`${name}, lá số đã mở ✦`,copy:'Bây giờ bạn có thể chạm bất kỳ cung hoặc sao nào. Hoặc chọn một câu hỏi bên dưới.',actions:[{label:'Tôi nên xem gì trước?',palace:'Mệnh'},{label:'Công việc',palace:'Quan Lộc'},{label:'Tình cảm',palace:'Phu Thê'},{label:'Tiền bạc',palace:'Tài Bạch'}]});
+}
+
+function restoreSavedChart(){
+  try { const raw=localStorage.getItem('menhdo:chart:v2'); if(!raw)return false; const input=JSON.parse(raw); const chart=generateChart(input); render(chart); return true; }
+  catch { localStorage.removeItem('menhdo:chart:v2'); return false; }
+}
+
+function openInfoDialog(key){
+  const data = DIALOGS[key]; if(!data)return;
+  $('#dialog-kicker').textContent=data.kicker; $('#dialog-title').textContent=data.title; $('#dialog-body').innerHTML=data.body;
+  const dialog=$('#info-dialog'); dialog.showModal(); document.body.classList.add('dialog-open');
+}
+
+$('#calendar-type').addEventListener('change',event => { $('#leap-wrap').hidden = event.target.value !== 'lunar'; });
+$('#la-so').addEventListener('focusin',event => {
+  const label = event.target.closest('[data-guide]'); if(!label)return;
+  const message = FIELD_GUIDE[label.dataset.guide]; $('#field-help').innerHTML = `<b>✦ Mệnh Đồ:</b> ${escapeHtml(message)}`;
+  openCompanion({title:'Mình đang lắng nghe',copy:message,actions:[]});
+});
+$('#la-so').addEventListener('submit',event => {
+  event.preventDefault(); const error=$('#form-error'); error.textContent='';
+  try { render(generateChart(chartInputFromForm())); }
+  catch (err) { error.textContent=err.message || 'Thông tin chưa hợp lệ.'; error.scrollIntoView({behavior:'smooth',block:'center'}); openCompanion({title:'Mình cần bạn kiểm tra một chút',copy:error.textContent,actions:[{label:'Quay lại biểu mẫu',scroll:'la-so'}]}); }
 });
 
+$('#chart-grid').addEventListener('click',event => {
+  const star=event.target.closest('[data-star]'); if(star){event.stopPropagation();showStar(star.dataset.star,star.closest('.palace').dataset.pos);return;}
+  const palace=event.target.closest('.palace'); if(palace)selectPalace(palace.dataset.name,{scroll:true});
+});
+$('#chart-grid').addEventListener('keydown',event => { const palace=event.target.closest('.palace'); if(palace && event.target===palace && ['Enter',' '].includes(event.key)){event.preventDefault();selectPalace(palace.dataset.name,{scroll:true});} });
+$('#topic-grid').addEventListener('click',event => { const card=event.target.closest('[data-topic]'); if(card)selectPalace(card.dataset.topic,{scroll:true}); });
+$('#guide-actions').addEventListener('click',event => handleAction(event));
+$('#companion-actions').addEventListener('click',event => handleAction(event));
+function handleAction(event){
+  const button=event.target.closest('button'); if(!button)return;
+  if(button.dataset.palace){selectPalace(button.dataset.palace,{scroll:true});closeCompanion();}
+  if(button.dataset.star)showStar(button.dataset.star,button.dataset.pos);
+  if(button.dataset.scroll){$(`#${button.dataset.scroll}`)?.scrollIntoView({behavior:'smooth',block:'start'});closeCompanion();}
+  if(button.dataset.restore){restoreSavedChart();closeCompanion();}
+}
+
+$('#guide-search').addEventListener('submit',event => {event.preventDefault();askGuide($('#guide-query').value);});
+$('#focus-prev').addEventListener('click',()=>selectPalace(PALACE_ORDER[(currentPalaceIndex+11)%12]));
+$('#focus-next').addEventListener('click',()=>selectPalace(PALACE_ORDER[(currentPalaceIndex+1)%12]));
+$$('.filter-button').forEach(button => button.addEventListener('click',()=>{
+  $$('.filter-button').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active));});
+  const chart=$('#chart-grid');chart.classList.remove('filter-main','filter-support','filter-challenge');if(button.dataset.filter!=='all')chart.classList.add(`filter-${button.dataset.filter}`);
+  const labels={all:'Đang hiện toàn bộ sao.',main:'Chỉ hiện 14 chính tinh — trục chính của mỗi cung.',support:'Chỉ hiện các sao hỗ trợ.',challenge:'Chỉ hiện những điểm cần quan sát tỉnh táo.'}; showToast(labels[button.dataset.filter]);
+}));
+
+$$('[data-preview-topic]').forEach(button => button.addEventListener('click',()=>{
+  const topic=button.dataset.previewTopic;if(currentChart)selectPalace(topic,{scroll:true});else openCompanion({title:`Bạn đang hỏi về ${PALACE_META[topic].label.toLowerCase()}`,copy:`Để trả lời theo đúng lá số, mình cần ngày, giờ sinh và giới tính. Sau khi tính xong, mình sẽ mở thẳng cung ${topic}.`,actions:[{label:'Điền thông tin ngay',scroll:'la-so'}]});
+}));
+
+$('#save-chart').addEventListener('click',saveChart);$('#copy-summary').addEventListener('click',copySummary);$('#new-chart').addEventListener('click',()=>{$('#ket-qua').classList.remove('visible');currentChart=null;$('#la-so').reset();$('#leap-wrap').hidden=true;$('#la-so').scrollIntoView({behavior:'smooth',block:'start'});openCompanion({title:'Mình sẵn sàng cho lá số mới',copy:'Hãy chạm từng ô. Mình sẽ giải thích vì sao thông tin đó cần thiết.',actions:[]});});
+$('#companion-launcher').addEventListener('click',()=>$('#companion-card').hidden?openCompanion(true):closeCompanion());$('#companion-close').addEventListener('click',closeCompanion);
+$$('[data-dialog]').forEach(button=>button.addEventListener('click',()=>openInfoDialog(button.dataset.dialog)));$('.dialog-close').addEventListener('click',()=>$('#info-dialog').close());$('#info-dialog').addEventListener('close',()=>document.body.classList.remove('dialog-open'));$('#info-dialog').addEventListener('click',event=>{if(event.target===$('#info-dialog'))$('#info-dialog').close();});
+
+setTimeout(()=>{
+  let hasSaved=false;try{hasSaved=!!localStorage.getItem('menhdo:chart:v2');}catch{}
+  openCompanion({title:'Chào bạn 👋',copy:hasSaved?'Mình thấy bạn có một lá số đã lưu trên thiết bị. Bạn muốn tiếp tục hay lập lá số mới?':'Mình là Mệnh Đồ. Chạm vào từng ô hoặc hỏi mình điều bạn muốn biết — mình sẽ chỉ đúng nơi cần xem.',actions:hasSaved?[{label:'Mở lá số đã lưu',restore:true},{label:'Lập lá số mới',scroll:'la-so'}]:[{label:'Bắt đầu lập lá số',scroll:'la-so'},{label:'Xem cách hoạt động',scroll:'cach-hoat-dong'}]});
+},700);
