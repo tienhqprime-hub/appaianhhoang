@@ -305,7 +305,8 @@ $('#calendar-type').addEventListener('change',event => { $('#leap-wrap').hidden 
 $('#la-so').addEventListener('focusin',event => {
   const label = event.target.closest('[data-guide]'); if(!label)return;
   const message = FIELD_GUIDE[label.dataset.guide]; $('#field-help').innerHTML = `<b>✦ Mệnh Đồ:</b> ${escapeHtml(message)}`;
-  openCompanion({title:'Mình đang lắng nghe',copy:message,actions:[]});
+  $('#companion-title').textContent = 'Mình đang lắng nghe';
+  $('#companion-copy').textContent = message;
 });
 $('#la-so').addEventListener('submit',event => {
   event.preventDefault(); const error=$('#form-error'); error.textContent='';
