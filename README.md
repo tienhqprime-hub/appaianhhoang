@@ -1,5 +1,9 @@
 # Mệnh Đồ AI
 
+**Mã quản trị:** `APP-TV-001`  
+**Phiên bản:** `v1.5 Public Beta`  
+**Bản công khai:** https://menh-do-ai.vercel.app
+
 Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt, theo nguyên tắc:
 
 > Soi sáng, không gieo sợ hãi; không gây hại cho mình, người và muôn loài.
@@ -14,13 +18,24 @@ Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt
 
 ## Trải nghiệm tương tác
 
+- “Tổng quan 60 giây” nêu cốt lõi, Thân cư, hướng tạo giá trị, cách quản trị
+  nguồn lực và chỉ rõ nơi nên xem tiếp.
 - Trợ lý ngữ cảnh chào người dùng và giải thích từng trường dữ liệu.
 - Hiểu các câu hỏi đời thường như công việc, tình cảm, tiền bạc, gia đình,
-  sức khỏe và đưa người dùng đến đúng cung.
+  sức khỏe; tách được câu hỏi có nhiều chủ đề và đưa người dùng đến đúng cung.
+- Lưu mạch hỏi–đáp gần nhất, có câu hỏi tiếp nối và phản hồi “Hữu ích/Chưa rõ”.
 - Có thể chạm từng cung, từng sao để xem giải nghĩa ngay trong ngữ cảnh.
 - Đọc sâu đủ 12 cung với điểm nâng đỡ, điều cần quan sát, câu hỏi soi chiếu
   và căn cứ kỹ thuật.
-- Lọc nhóm sao, lưu lá số trên thiết bị và sao chép tóm tắt.
+- Lọc nhóm sao, lưu/xóa dữ liệu trên thiết bị, sao chép tóm tắt và chia sẻ
+  đường dẫn công khai mà không gắn ngày sinh vào URL.
+
+## Chuẩn public beta 9,5
+
+Điểm 9,5 dùng cho chất lượng trải nghiệm public beta: đúng cấu trúc kỹ thuật
+trong phạm vi bộ kiểm thử, dễ bắt đầu, chạm đâu có phản hồi, có căn cứ, an
+toàn, bảo vệ dữ liệu và dùng được trên desktop/mobile. Điểm này không có nghĩa
+là một nền tảng thương mại đã hoàn tất hoặc là công cụ dự đoán khoa học.
 
 ## Chạy và kiểm thử
 
