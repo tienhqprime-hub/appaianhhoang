@@ -42,6 +42,21 @@ const FIELD_GUIDE = {
   name:'Tên chỉ dùng để xưng hô trong phần kết quả. Bạn có thể để trống và hệ thống sẽ gọi là “Bạn”.'
 };
 
+const ACTION_PLAYBOOK = {
+  'Mệnh':{proceed:'Chọn một thế mạnh đang có và dùng nó cho một việc cụ thể trong 7 ngày.',pause:'Chưa nên tự gắn nhãn bản thân. Hãy ghi lại ba tình huống thật trước khi kết luận.',adjust:'Giảm một phản ứng vội, xin phản hồi từ người tin cậy và thử lại bằng một bước nhỏ.'},
+  'Phụ Mẫu':{proceed:'Nên chủ động một cuộc trao đổi tôn trọng và nói rõ điều bạn cần.',pause:'Chưa nên quy kết đúng sai từ một phía; hãy nghe lại bối cảnh của cả hai bên.',adjust:'Cần sửa ranh giới hoặc cách giao tiếp trước khi bàn chuyện lớn với gia đình hay cấp trên.'},
+  'Phúc Đức':{proceed:'Nên duy trì một thói quen hồi phục đều đặn và có thể đo được.',pause:'Chưa nên ép mình phải có câu trả lời ngay khi tinh thần còn quá tải.',adjust:'Cần giảm một nguồn tiêu hao và tìm người hỗ trợ phù hợp trước khi cố gắng thêm.'},
+  'Điền Trạch':{proceed:'Nên cải thiện một phần nhỏ của không gian sống hoặc nền tảng vật chất trước.',pause:'Chưa nên mua, bán hay chuyển chỗ ở chỉ dựa trên lá số.',adjust:'Cần rà lại ngân sách, giấy tờ và nhu cầu thật trước một quyết định nhà cửa khó đảo ngược.'},
+  'Quan Lộc':{proceed:'Nên thử một bước nghề nghiệp nhỏ, có mục tiêu và thước đo rõ trong 7–30 ngày.',pause:'Chưa nên nghỉ việc, đổi nghề hay mở rộng chỉ từ một luận giải.',adjust:'Cần làm rõ vai trò, ưu tiên và một năng lực còn thiếu trước khi nhận trách nhiệm lớn hơn.'},
+  'Nô Bộc':{proceed:'Nên đầu tư vào một cộng sự đáng tin bằng kỳ vọng và cam kết rõ ràng.',pause:'Chưa nên giao việc hoặc đặt niềm tin lớn khi vai trò và trách nhiệm còn mơ hồ.',adjust:'Cần sửa ranh giới hợp tác, quyền truy cập hoặc cách kiểm tra kết quả trước.'},
+  'Thiên Di':{proceed:'Nên thử môi trường mới ở quy mô nhỏ và chuẩn bị một phương án quay về.',pause:'Chưa nên di chuyển hoặc thay đổi môi trường lớn khi dữ liệu thực tế còn thiếu.',adjust:'Cần bổ sung kế hoạch, nguồn lực và người hỗ trợ trước khi bước ra khỏi vùng quen thuộc.'},
+  'Tật Ách':{proceed:'Nên điều chỉnh một thói quen ngủ, vận động hoặc nghỉ ngơi và theo dõi phản ứng thực tế.',pause:'Chưa nên tự chẩn đoán hay thay đổi điều trị từ nội dung Tử Vi.',adjust:'Nếu dấu hiệu kéo dài, nghiêm trọng hoặc bất thường, cần ưu tiên chuyên gia y tế phù hợp.'},
+  'Tài Bạch':{proceed:'Nên củng cố một nguyên tắc thu–chi hoặc quỹ dự phòng trước khi tìm lợi nhuận.',pause:'Chưa nên đầu tư, vay hoặc mở rộng tài chính chỉ dựa trên luận giải.',adjust:'Cần rà soát dòng tiền, nghĩa vụ, quỹ dự phòng và giới hạn rủi ro trước.'},
+  'Tử Tức':{proceed:'Nên nuôi một ý tưởng hoặc mối quan hệ bằng lịch chăm sóc đều đặn.',pause:'Chưa nên thúc ép kết quả khi quá trình còn cần thời gian và quan sát.',adjust:'Cần giảm kỳ vọng, bổ sung nguồn lực và lắng nghe nhu cầu thật trước.'},
+  'Phu Thê':{proceed:'Nên có một cuộc trò chuyện chân thành, nói rõ nhu cầu và điều có thể cam kết.',pause:'Chưa nên kết luận một mối quan hệ hoặc quyết định chia tay, cưới hỏi chỉ từ lá số.',adjust:'Cần sửa cách giao tiếp, ranh giới hoặc một hành vi lặp lại trước khi yêu cầu người kia thay đổi.'},
+  'Huynh Đệ':{proceed:'Nên chủ động một hành động hỗ trợ nhỏ nhưng có giới hạn rõ.',pause:'Chưa nên so sánh, phân xử hoặc gánh thay khi chưa nghe đủ các bên.',adjust:'Cần làm rõ trách nhiệm và cách chia sẻ nguồn lực trước khi tiếp tục hỗ trợ.'}
+};
+
 const DIALOGS = {
   terms:{kicker:'Điều khoản sử dụng',title:'Một công cụ để soi chiếu, không quyết định thay bạn.',body:'<p>Mệnh Đồ AI cung cấp nội dung diễn giải truyền thống nhằm mục đích tham khảo và tự khám phá. Bạn chịu trách nhiệm với mọi quyết định của mình.</p><h3>Giới hạn rõ ràng</h3><p>Không dùng nội dung trên trang để thay thế chuyên gia y tế, pháp lý, tài chính hoặc tư vấn tâm lý. Hệ thống không cam kết dự đoán sự kiện tương lai.</p>'},
   privacy:{kicker:'Bảo mật',title:'Ngày sinh được xử lý ngay trên thiết bị.',body:'<p>Bản hiện tại không gửi dữ liệu biểu mẫu lên máy chủ. Phép tính lá số và phần giải nghĩa chạy trong trình duyệt.</p><h3>Bạn kiểm soát dữ liệu</h3><p>Chỉ khi bấm “Lưu trên thiết bị”, thông tin đầu vào mới được lưu trong trình duyệt đang dùng. Nút “Xóa dữ liệu đã lưu” sẽ xóa lá số và phản hồi cục bộ. Tính năng chia sẻ chỉ chia sẻ đường dẫn trang, không gắn ngày sinh vào liên kết.</p>'},
@@ -97,6 +112,32 @@ function starExplanation(star, palace){
   return `${star.name} mô tả một nhịp phát triển trong cung ${palace.name}. Nên đọc cùng chính tinh và toàn bộ cấu trúc cung.`;
 }
 
+function actionConclusion(palace, star=null){
+  const supports = palace.stars.filter(item => item.type === 'support').length;
+  const challenges = palace.stars.filter(item => item.type === 'challenge').length;
+  const difficultMains = palace.stars.filter(item => item.type === 'main' && item.strength === 'H').length;
+  const obscured = Number(Boolean(palace.tuan)) + Number(Boolean(palace.triet));
+  let mode = 'pause';
+  if (star?.type === 'challenge') mode = 'adjust';
+  else if (star?.type === 'support') mode = 'proceed';
+  else if (challenges + difficultMains + obscured >= supports + 2) mode = 'adjust';
+  else if (supports > challenges && palace.stars.some(item => item.type === 'main')) mode = 'proceed';
+  const labels = {proceed:'Nên tiến từng bước',pause:'Chưa nên quyết vội',adjust:'Cần điều chỉnh trước'};
+  const playbook = ACTION_PLAYBOOK[palace.name];
+  const signal = `${supports} tín hiệu nâng đỡ và ${challenges} điểm cần quan sát${difficultMains ? `; ${difficultMains} chính tinh ở trạng thái cần thận trọng` : ''}${obscured ? '; có Tuần/Triệt nên cần thêm thời gian kiểm chứng' : ''}`;
+  const summaries = {
+    proceed:`Cung ${palace.name} đang có thế nâng đỡ nhỉnh hơn điểm ma sát. Có thể tiến, nhưng nên đi bằng bước nhỏ có thước đo.`,
+    pause:`Cung ${palace.name} chưa cho một hướng đủ rõ để quyết việc khó đảo ngược. Nên bổ sung dữ liệu đời thực trước.`,
+    adjust:`Cung ${palace.name} đang có nhiều điểm ma sát cần quản trị hơn. Hãy sửa nền tảng trước rồi mới đánh giá lại.`
+  };
+  const steps = mode === 'proceed'
+    ? ['Chọn một việc nhỏ có thể làm ngay','Đặt mốc kiểm tra sau 7–30 ngày','Giữ lại điều hiệu quả, bỏ điều không phù hợp']
+    : mode === 'adjust'
+      ? ['Tạm dừng quyết định khó đảo ngược','Sửa một nguyên nhân trong tầm kiểm soát','Kiểm chứng lại bằng kết quả và ý kiến phù hợp']
+      : ['Ghi rõ điều còn thiếu dữ liệu','Đối chiếu với một tình huống thật','Chỉ quyết định khi đã có tiêu chí rõ'];
+  return {mode,label:labels[mode],summary:summaries[mode],action:playbook[mode],steps,evidence:`Cân bằng tín hiệu: ${signal}.`};
+}
+
 function analyzePalace(palace){
   const meta = PALACE_META[palace.name];
   const majors = palace.stars.filter(star => star.type === 'main');
@@ -112,7 +153,7 @@ function analyzePalace(palace){
   const support = supports.length ? supports.slice(0,3).map(star => `${star.name}: ${supportMeaning(star.name)}`) : ['Không có sao hỗ trợ nổi bật riêng; hãy nhìn vào chính tinh và liên kết cung.'];
   const watch = challenges.length ? challenges.slice(0,3).map(star => `${star.name}: ${challengeMeaning(star.name)}`) : ['Không có điểm ma sát nổi bật trong nhóm sao đang xét; vẫn cần đối chiếu hoàn cảnh thực tế.'];
   const evidence = `Căn cứ: cung ${palace.name} tại ${palace.branch}${palace.body ? ', có Thân cư' : ''}; ${names.length ? `chính tinh ${names.join(', ')}` : 'vô chính diệu'}; ${supports.length} sao hỗ trợ; ${challenges.length} điểm cần lưu ý; đại hạn ${palace.majorAge}–${palace.majorAge + 9}.`;
-  return {meta, headline, copy, support, watch, evidence};
+  return {meta, headline, copy, support, watch, evidence, conclusion:actionConclusion(palace)};
 }
 
 function starMarkup(star){
@@ -197,12 +238,23 @@ function rememberGuide(role, text){
   renderGuideHistory();
 }
 
-function setGuide({eyebrow,title,copy,actions=[],basis}){
+function renderGuideVerdict(verdict){
+  const safeVerdict = verdict || {mode:'pause',label:'Cần dữ liệu trước',summary:'Hãy lập lá số hoặc chọn đúng cung để nhận kết luận hành động.',action:'Chưa nên kết luận khi chưa có đủ dữ liệu cung và sao.'};
+  const box = $('#guide-verdict');
+  box.className = `guide-verdict ${safeVerdict.mode || 'pause'}`;
+  $('#guide-verdict-label').textContent = safeVerdict.label;
+  $('#guide-verdict-title').textContent = safeVerdict.summary;
+  $('#guide-verdict-copy').textContent = safeVerdict.action;
+}
+
+function setGuide({eyebrow,title,copy,actions=[],basis,verdict}){
   currentGuideContext = eyebrow || title || 'Đọc lá số';
   $('#guide-eyebrow').textContent = eyebrow;
   $('#guide-title').textContent = title;
   $('#guide-copy').textContent = copy;
   $('#guide-basis').textContent = basis || 'Mỗi câu trả lời đều ghi rõ cung và sao làm căn cứ.';
+  const activePalace = currentChart ? palaceByName(PALACE_ORDER[currentPalaceIndex]) : null;
+  renderGuideVerdict(verdict || (activePalace ? actionConclusion(activePalace) : null));
   const wrap = $('#guide-actions'); wrap.innerHTML = '';
   actions.forEach(action => {
     const button = document.createElement('button'); button.type = 'button'; button.textContent = action.label;
@@ -228,9 +280,16 @@ function selectPalace(name, options={}){
   $('#focus-watch').innerHTML = analysis.watch.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   $('#focus-questions').innerHTML = analysis.meta.questions.map(question => `<li>${escapeHtml(question)}</li>`).join('');
   $('#focus-evidence').textContent = analysis.evidence;
+  const verdict = analysis.conclusion;
+  $('#focus-verdict').className = `action-card ${verdict.mode}`;
+  $('#focus-verdict-badge').textContent = verdict.label;
+  $('#focus-verdict-title').textContent = verdict.summary;
+  $('#focus-verdict-copy').textContent = verdict.action;
+  $('#focus-verdict-steps').innerHTML = verdict.steps.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  $('#focus-verdict-evidence').textContent = verdict.evidence;
   $('#focus-position').textContent = `${String(currentPalaceIndex + 1).padStart(2,'0')} / 12`;
   const related = RELATED_PALACES[name].slice(0,2);
-  setGuide({eyebrow:`Đang đọc cung ${name}`,title:analysis.headline,copy:analysis.copy,actions:[...related.map(palaceName => ({label:`Xem ${PALACE_META[palaceName].label}`,palace:palaceName})),{label:'Đến phần đọc sâu',scroll:'deep-dive'}],basis:analysis.evidence});
+  setGuide({eyebrow:`Đang đọc cung ${name}`,title:analysis.headline,copy:analysis.copy,actions:[...related.map(palaceName => ({label:`Xem ${PALACE_META[palaceName].label}`,palace:palaceName})),{label:'Đến phần đọc sâu',scroll:'deep-dive'}],basis:analysis.evidence,verdict});
   if (options.scroll) $('#deep-dive').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -241,7 +300,7 @@ function showStar(starName, position){
   if (!palace || !star) return;
   selectPalace(palace.name);
   const siblings = palace.stars.filter(item => item.type === 'main' && item.name !== starName).slice(0,2);
-  setGuide({eyebrow:`Giải nghĩa ${star.type === 'main' ? 'chính tinh' : 'sao'} · cung ${palace.name}`,title:`${star.name}${star.strength ? ` (${strengthLabel(star.strength)})` : ''}`,copy:starExplanation(star,palace),actions:[{label:`Đọc toàn bộ cung ${palace.name}`,palace:palace.name},...siblings.map(item => ({label:`Hiểu ${item.name}`,star:item.name,pos:palace.position}))],basis:`Vị trí thật trên lá số: ${star.name} tại cung ${palace.name} (${palace.branch})${star.strength ? `, trạng thái ${strengthLabel(star.strength)}` : ''}.`});
+  setGuide({eyebrow:`Giải nghĩa ${star.type === 'main' ? 'chính tinh' : 'sao'} · cung ${palace.name}`,title:`${star.name}${star.strength ? ` (${strengthLabel(star.strength)})` : ''}`,copy:starExplanation(star,palace),actions:[{label:`Đọc toàn bộ cung ${palace.name}`,palace:palace.name},...siblings.map(item => ({label:`Hiểu ${item.name}`,star:item.name,pos:palace.position}))],basis:`Vị trí thật trên lá số: ${star.name} tại cung ${palace.name} (${palace.branch})${star.strength ? `, trạng thái ${strengthLabel(star.strength)}` : ''}.`,verdict:actionConclusion(palace,star)});
   $('#guide-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
@@ -270,7 +329,7 @@ function askGuide(query){
   if (topics.length > 1) {
     const first = analyzePalace(palaceByName(topics[0])), second = analyzePalace(palaceByName(topics[1]));
     const answer = `Câu hỏi này chạm hai lớp: ${first.meta.label.toLowerCase()} và ${second.meta.label.toLowerCase()}. Nên đọc cung ${topics[0]} trước để thấy trục chính, rồi đối chiếu cung ${topics[1]} để tránh kết luận một chiều.`;
-    setGuide({eyebrow:'Câu hỏi có nhiều lớp',title:`${topics[0]} ↔ ${topics[1]}`,copy:answer,actions:topics.slice(0,3).map(name => ({label:`Mở cung ${name}`,palace:name})),basis:`Căn cứ được tách thành ${topics.slice(0,3).map(name => `cung ${name}`).join(', ')} theo chính từ khóa trong câu hỏi của bạn.`});
+    setGuide({eyebrow:'Câu hỏi có nhiều lớp',title:`${topics[0]} ↔ ${topics[1]}`,copy:answer,actions:topics.slice(0,3).map(name => ({label:`Mở cung ${name}`,palace:name})),basis:`Căn cứ được tách thành ${topics.slice(0,3).map(name => `cung ${name}`).join(', ')} theo chính từ khóa trong câu hỏi của bạn.`,verdict:{mode:'pause',label:'Chưa nên quyết vội',summary:'Câu hỏi đang liên quan nhiều mặt nên chưa phù hợp để kết luận từ một cung.',action:`Đọc cung ${topics[0]} trước, đối chiếu cung ${topics[1]}, rồi kiểm tra lại bằng dữ liệu thực tế.`}});
     rememberGuide('assistant',answer);
     $('#guide-panel').scrollIntoView({behavior:'smooth',block:'start'});
     return;
@@ -283,7 +342,7 @@ function askGuide(query){
     return;
   }
   const fallback = 'Mình chưa muốn đoán sai ý bạn. Hãy chọn một hướng gần nhất; sau đó bạn có thể hỏi tiếp ngay trong cung đó.';
-  setGuide({eyebrow:'Mình chưa chắc bạn đang hỏi chủ đề nào',title:'Chọn một hướng gần nhất nhé.',copy:'Bạn có thể nói ngắn gọn: công việc, tiền bạc, tình yêu, gia đình, sức khỏe, đi xa hoặc bản thân.',actions:['Quan Lộc','Tài Bạch','Phu Thê','Mệnh'].map(name => ({label:PALACE_META[name].label,palace:name})),basis:'Mệnh Đồ chỉ chuyển câu hỏi đến đúng cung; không tự bịa thêm dữ liệu ngoài lá số.'});
+  setGuide({eyebrow:'Mình chưa chắc bạn đang hỏi chủ đề nào',title:'Chọn một hướng gần nhất nhé.',copy:'Bạn có thể nói ngắn gọn: công việc, tiền bạc, tình yêu, gia đình, sức khỏe, đi xa hoặc bản thân.',actions:['Quan Lộc','Tài Bạch','Phu Thê','Mệnh'].map(name => ({label:PALACE_META[name].label,palace:name})),basis:'Mệnh Đồ chỉ chuyển câu hỏi đến đúng cung; không tự bịa thêm dữ liệu ngoài lá số.',verdict:{mode:'pause',label:'Chưa nên kết luận',summary:'Câu hỏi chưa chỉ ra đúng chủ đề cần xem.',action:'Chọn một hướng gần nhất để hệ thống đưa bạn đến đúng cung và nêu căn cứ.'}});
   rememberGuide('assistant',fallback);
 }
 
