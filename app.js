@@ -117,11 +117,12 @@ function actionConclusion(palace, star=null){
   const challenges = palace.stars.filter(item => item.type === 'challenge').length;
   const difficultMains = palace.stars.filter(item => item.type === 'main' && item.strength === 'H').length;
   const obscured = Number(Boolean(palace.tuan)) + Number(Boolean(palace.triet));
-  let mode = 'pause';
+  let baseMode = 'pause';
+  if (challenges + difficultMains + obscured >= supports + 2) baseMode = 'adjust';
+  else if (supports > challenges && palace.stars.some(item => item.type === 'main')) baseMode = 'proceed';
+  let mode = baseMode;
   if (star?.type === 'challenge') mode = 'adjust';
-  else if (star?.type === 'support') mode = 'proceed';
-  else if (challenges + difficultMains + obscured >= supports + 2) mode = 'adjust';
-  else if (supports > challenges && palace.stars.some(item => item.type === 'main')) mode = 'proceed';
+  else if (star?.type === 'support') mode = baseMode === 'adjust' ? 'pause' : 'proceed';
   const labels = {proceed:'Nên tiến từng bước',pause:'Chưa nên quyết vội',adjust:'Cần điều chỉnh trước'};
   const playbook = ACTION_PLAYBOOK[palace.name];
   const signal = `${supports} tín hiệu nâng đỡ và ${challenges} điểm cần quan sát${difficultMains ? `; ${difficultMains} chính tinh ở trạng thái cần thận trọng` : ''}${obscured ? '; có Tuần/Triệt nên cần thêm thời gian kiểm chứng' : ''}`;
@@ -130,6 +131,11 @@ function actionConclusion(palace, star=null){
     pause:`Cung ${palace.name} chưa cho một hướng đủ rõ để quyết việc khó đảo ngược. Nên bổ sung dữ liệu đời thực trước.`,
     adjust:`Cung ${palace.name} đang có nhiều điểm ma sát cần quản trị hơn. Hãy sửa nền tảng trước rồi mới đánh giá lại.`
   };
+  if (star?.type === 'support') summaries[mode] = mode === 'proceed'
+    ? `${star.name} là một nguồn lực hỗ trợ trong cung ${palace.name}. Có thể dùng nguồn lực này cho một bước thử nhỏ.`
+    : `${star.name} là điểm nâng đỡ, nhưng chưa đủ để lấn át các điểm ma sát của toàn cung ${palace.name}.`;
+  else if (star?.type === 'challenge') summaries.adjust = `${star.name} là điểm cần quản trị trong cung ${palace.name}. Hãy điều chỉnh trước khi dựa vào chủ đề này để quyết việc lớn.`;
+  else if (star?.type === 'main') summaries[mode] = `${star.name} là khuynh hướng chính của cung ${palace.name}; kết luận vẫn dựa trên toàn bộ sao nâng đỡ và điểm cần quan sát.`;
   const steps = mode === 'proceed'
     ? ['Chọn một việc nhỏ có thể làm ngay','Đặt mốc kiểm tra sau 7–30 ngày','Giữ lại điều hiệu quả, bỏ điều không phù hợp']
     : mode === 'adjust'
