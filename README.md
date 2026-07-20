@@ -27,6 +27,9 @@ Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt
 - Có thể chạm từng cung, từng sao để xem giải nghĩa ngay trong ngữ cảnh.
 - Đọc sâu đủ 12 cung với điểm nâng đỡ, điều cần quan sát, câu hỏi soi chiếu
   và căn cứ kỹ thuật.
+- Mỗi lần xem cung hoặc sao đều có “Kết luận hành động”: nên tiến từng bước,
+  chưa nên quyết vội hoặc cần điều chỉnh trước; kèm việc làm cụ thể và cách
+  kiểm chứng lại bằng thực tế.
 - Lọc nhóm sao, lưu/xóa dữ liệu trên thiết bị, sao chép tóm tắt và chia sẻ
   đường dẫn công khai mà không gắn ngày sinh vào URL.
 
