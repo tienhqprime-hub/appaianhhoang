@@ -1,7 +1,7 @@
 # Mệnh Đồ AI
 
-**Mã quản trị:** `APP-TV-001`  
-**Phiên bản:** `v1.5 Public Beta`  
+**Mã quản trị:** `APP-TV-001`<br>
+**Phiên bản:** `v1.5 Public Beta`<br>
 **Bản công khai:** https://menh-do-ai.vercel.app
 
 Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt, theo nguyên tắc:
