@@ -19,7 +19,8 @@ Trang lập lá số Tử Vi Đẩu Số chạy hoàn toàn trong trình duyệt
 ## Trải nghiệm tương tác
 
 - “Tổng quan 60 giây” nêu cốt lõi, Thân cư, hướng tạo giá trị, cách quản trị
-  nguồn lực và chỉ rõ nơi nên xem tiếp.
+  nguồn lực và chỉ rõ nơi nên xem tiếp; bốn ô tổng quan luôn chọn bốn cung
+  khác nhau để không lặp chủ đề khi cung Thân trùng Tài Bạch hoặc Quan Lộc.
 - Trợ lý ngữ cảnh chào người dùng và giải thích từng trường dữ liệu.
 - Hiểu các câu hỏi đời thường như công việc, tình cảm, tiền bạc, gia đình,
   sức khỏe; tách được câu hỏi có nhiều chủ đề và đưa người dùng đến đúng cung.
