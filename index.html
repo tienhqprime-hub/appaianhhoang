@@ -7,12 +7,12 @@
   <meta name="theme-color" content="#f3ecdf">
   <meta name="google" content="notranslate">
   <title>Mệnh Đồ AI — Lá số biết trò chuyện</title>
-  <link rel="stylesheet" href="./styles.css?v=20260720-2">
+  <link rel="stylesheet" href="./styles.css?v=20260720-3">
 </head>
 <body>
   <a class="skip-link" href="#la-so">Đi đến phần lập lá số</a>
   <header class="site-header" id="top">
-    <a class="brand" href="#top" aria-label="Mệnh Đồ AI - Trang đầu"><span class="seal">M</span><span>Mệnh Đồ AI</span></a>
+    <a class="brand" href="#top" aria-label="Mệnh Đồ AI - Trang đầu"><span class="seal">M</span><span>Mệnh Đồ AI</span><small class="version-badge">v1.5 Public Beta</small></a>
     <nav aria-label="Điều hướng chính">
       <a href="#trai-nghiem">Trải nghiệm</a><a href="#cach-hoat-dong">Cách hoạt động</a><a href="#nguyen-tac">Nguyên tắc</a><a class="nav-cta" href="#la-so">Lập lá số</a>
     </nav>
@@ -76,6 +76,15 @@
 
       <section class="identity-strip" id="identity-strip" aria-label="Thông tin lá số nổi bật"></section>
 
+      <section class="quick-overview" id="quick-overview" aria-labelledby="overview-title">
+        <div class="overview-heading">
+          <div><p class="section-kicker">Tổng quan 60 giây</p><h3 id="overview-title">Điều nổi bật và nơi nên xem trước</h3></div>
+          <p>Đây là bản dẫn đường được tổng hợp từ chính lá số, không phải một lời phán chung chung.</p>
+        </div>
+        <div class="overview-grid" id="overview-grid"></div>
+        <div class="overview-paths" id="overview-paths"></div>
+      </section>
+
       <div class="result-layout">
         <div class="chart-column">
           <div class="chart-toolbar">
@@ -94,6 +103,7 @@
 
         <aside class="guide-panel" id="guide-panel" aria-live="polite">
           <div class="guide-profile"><span class="guide-avatar">✦</span><div><small>TRỢ LÝ ĐỌC LÁ SỐ</small><strong>Mệnh Đồ đồng hành</strong></div><i aria-hidden="true"></i></div>
+          <div class="guide-history" id="guide-history" aria-label="Mạch trao đổi gần đây"></div>
           <p class="guide-eyebrow" id="guide-eyebrow">Bắt đầu ở đây</p>
           <h3 id="guide-title">Chào bạn, mình sẽ dẫn đường.</h3>
           <p class="guide-copy" id="guide-copy">Nếu chưa quen Tử Vi, hãy chọn một điều bạn đang quan tâm. Mình sẽ đưa bạn đến đúng cung và giải thích từng lớp.</p>
@@ -103,6 +113,10 @@
             <div><input id="guide-query" type="text" autocomplete="off" placeholder="Ví dụ: công việc, tình cảm..."><button type="submit" aria-label="Gửi câu hỏi">→</button></div>
           </form>
           <p class="guide-basis" id="guide-basis">Mỗi câu trả lời đều ghi rõ cung và sao làm căn cứ.</p>
+          <div class="guide-feedback" id="guide-feedback" aria-label="Đánh giá câu trả lời">
+            <span>Câu trả lời này có giúp bạn biết bước tiếp theo?</span>
+            <div><button type="button" data-feedback="useful">Có, hữu ích</button><button type="button" data-feedback="unclear">Chưa rõ</button></div>
+          </div>
         </aside>
       </div>
 
@@ -121,7 +135,7 @@
 
       <div class="result-actions">
         <div><strong>Lá số này thuộc về bạn.</strong><span>Bạn có thể lưu trên thiết bị hoặc sao chép phần tóm tắt.</span></div>
-        <div><button type="button" id="save-chart">Lưu trên thiết bị</button><button type="button" id="copy-summary">Sao chép tóm tắt</button><button type="button" id="new-chart">Lập lá số khác</button></div>
+        <div><button type="button" id="save-chart">Lưu trên thiết bị</button><button type="button" id="copy-summary">Sao chép tóm tắt</button><button type="button" id="share-chart">Chia sẻ Mệnh Đồ</button><button type="button" id="delete-data">Xóa dữ liệu đã lưu</button><button type="button" id="new-chart">Lập lá số khác</button></div>
       </div>
       <p class="technical-summary" id="technical-summary"></p>
       <p class="disclaimer">Tử Vi là hệ thống diễn giải truyền thống, không phải khoa học dự đoán đã được kiểm chứng. Nội dung dùng để tự soi chiếu; không thay thế tư vấn y tế, pháp lý hoặc tài chính.</p>
@@ -150,6 +164,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <dialog class="info-dialog" id="info-dialog"><button class="dialog-close" type="button" aria-label="Đóng">×</button><p class="section-kicker" id="dialog-kicker"></p><h2 id="dialog-title">Thông tin</h2><div id="dialog-body"></div></dialog>
-  <script type="module" src="./app.js?v=20260720-2"></script>
+  <script type="module" src="./app.js?v=20260720-3"></script>
 </body>
 </html>
