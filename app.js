@@ -33,6 +33,21 @@ const RELATED_PALACES = {
   'Tử Tức':['Phu Thê','Phúc Đức','Điền Trạch'],'Phu Thê':['Mệnh','Phúc Đức','Tử Tức'],'Huynh Đệ':['Phụ Mẫu','Nô Bộc','Phúc Đức']
 };
 
+const VOID_GUIDANCE = {
+  'Mệnh':'Không có chính tinh tọa thủ, khí chất có thể đổi sắc theo môi trường. Hãy nhìn thêm Thiên Di để hiểu cách bạn hiện diện bên ngoài và Phúc Đức để thấy nền nội tâm.',
+  'Phụ Mẫu':'Không có chính tinh tọa thủ, ảnh hưởng gia đình cần được nhận diện qua trải nghiệm thật. Phúc Đức giúp soi dấu ấn được truyền lại, còn Huynh Đệ cho thấy cách các thành viên nâng đỡ nhau.',
+  'Phúc Đức':'Không có chính tinh tọa thủ, sức bền tinh thần thường hiện rõ qua cách bạn sống hơn là một nét cố định. Hãy nối với Mệnh và Tật Ách để hiểu nhịp hồi phục phù hợp.',
+  'Điền Trạch':'Không có chính tinh tọa thủ, chuyện nhà cửa nên được nhìn từ nhu cầu an cư và khả năng nguồn lực. Tài Bạch và Phúc Đức là hai góc đối chiếu quan trọng.',
+  'Quan Lộc':'Không có chính tinh tọa thủ, đường nghề nghiệp có thể linh hoạt theo từng giai đoạn. Mệnh cho biết cách tạo giá trị, còn Tài Bạch giúp kiểm tra tính bền vững của lựa chọn.',
+  'Nô Bộc':'Không có chính tinh tọa thủ, chất lượng cộng sự phụ thuộc nhiều vào môi trường và ranh giới hợp tác. Hãy đọc cùng Quan Lộc và Thiên Di để thấy kiểu kết nối phù hợp.',
+  'Thiên Di':'Không có chính tinh tọa thủ, khả năng thích nghi cần được kiểm chứng trong từng môi trường cụ thể. Mệnh và Quan Lộc cho biết bạn nên mang thế mạnh nào ra bên ngoài.',
+  'Tật Ách':'Không có chính tinh tọa thủ, phần này nên tập trung vào thói quen và phản ứng thực tế của cơ thể–tinh thần. Phúc Đức và Mệnh giúp nhận diện nguồn gây quá tải; đây không phải chẩn đoán y khoa.',
+  'Tài Bạch':'Không có chính tinh tọa thủ, cách tạo và giữ tiền cần đọc qua hành vi thực tế. Quan Lộc cho thấy nguồn tạo giá trị, còn Điền Trạch gợi cách xây nền tài sản bền hơn.',
+  'Tử Tức':'Không có chính tinh tọa thủ, năng lực nuôi dưỡng sẽ rõ qua điều bạn kiên trì tạo ra. Phúc Đức và Phu Thê giúp soi cách chia sẻ trách nhiệm và kỳ vọng.',
+  'Phu Thê':'Không có chính tinh tọa thủ, chất lượng quan hệ không nằm ở một dấu hiệu đơn lẻ. Mệnh và Phúc Đức giúp làm rõ nhu cầu, ranh giới và cách bạn xây sự an toàn.',
+  'Huynh Đệ':'Không có chính tinh tọa thủ, quan hệ cùng thế hệ nên được hiểu qua cách chia sẻ và giữ giới hạn. Phụ Mẫu và Nô Bộc cho thêm bối cảnh về gia đình và hợp tác.'
+};
+
 const FIELD_GUIDE = {
   calendar:'Bạn đang dùng ngày trên giấy tờ theo Dương lịch hay ngày Âm lịch gia đình ghi lại? Chọn đúng loại để phép đổi lịch không bị lặp.',
   birth:'Ngày sinh là tọa độ đầu tiên để tính âm lịch, Can Chi ngày và vị trí nhiều vòng sao.',
@@ -151,10 +166,11 @@ function analyzePalace(palace){
   const challenges = palace.stars.filter(star => star.type === 'challenge');
   const names = majors.map(star => star.name);
   const traits = majors.map(star => TRAITS[star.name]).filter(Boolean);
-  const headline = names.length ? `${names.join(' · ')} đặt trọng tâm vào ${meta.label.toLowerCase()}` : `${meta.label}: cần đọc qua liên kết với các cung đối chiếu`;
+  const related = RELATED_PALACES[palace.name];
+  const headline = names.length ? `${names.join(' · ')} đặt trọng tâm vào ${meta.label.toLowerCase()}` : `${meta.label}: soi thêm ${related[0]} và ${related[1]}`;
   let copy = meta.intro;
   if (traits.length) copy += ` Với ${names.join(' và ')}, cách biểu hiện nổi bật là ${traits.join('; ')}.`;
-  else copy += ' Cung này vô chính diệu, vì vậy không nên kết luận riêng lẻ; cần đọc cùng đối cung, tam phương và các sao phụ.';
+  else copy += ` ${VOID_GUIDANCE[palace.name]}`;
   if (palace.body) copy += ' Cung này đồng thời có Thân cư, nên chủ đề thường trở nên rõ hơn qua lựa chọn và trải nghiệm trưởng thành.';
   const support = supports.length ? supports.slice(0,3).map(star => `${star.name}: ${supportMeaning(star.name)}`) : ['Không có sao hỗ trợ nổi bật riêng; hãy nhìn vào chính tinh và liên kết cung.'];
   const watch = challenges.length ? challenges.slice(0,3).map(star => `${star.name}: ${challengeMeaning(star.name)}`) : ['Không có điểm ma sát nổi bật trong nhóm sao đang xét; vẫn cần đối chiếu hoàn cảnh thực tế.'];
@@ -212,7 +228,7 @@ function renderTopics(){
 function overviewCard(name, label, tone='light'){
   const palace = palaceByName(name), analysis = analyzePalace(palace);
   const majors = majorNames(palace);
-  const signal = majors.length ? majors.slice(0,2).join(' · ') : 'Vô chính diệu — cần đọc liên cung';
+  const signal = majors.length ? majors.slice(0,2).join(' · ') : `Không có chính tinh · xem thêm ${RELATED_PALACES[name][0]}`;
   return `<button type="button" class="overview-card ${tone}" data-overview-palace="${escapeHtml(name)}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(analysis.meta.label)}</strong><b>${escapeHtml(signal)}</b><p>${escapeHtml(analysis.copy.split('.').slice(0,2).join('.') + '.')}</p><i>Chạm để xem căn cứ →</i></button>`;
 }
 
