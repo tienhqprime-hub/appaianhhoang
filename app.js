@@ -216,17 +216,33 @@ function overviewCard(name, label, tone='light'){
   return `<button type="button" class="overview-card ${tone}" data-overview-palace="${escapeHtml(name)}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(analysis.meta.label)}</strong><b>${escapeHtml(signal)}</b><p>${escapeHtml(analysis.copy.split('.').slice(0,2).join('.') + '.')}</p><i>Chạm để xem căn cứ →</i></button>`;
 }
 
+function uniqueOverviewPalace(candidates, used){
+  const name = candidates.find(candidate => PALACE_ORDER.includes(candidate) && !used.has(candidate))
+    || PALACE_ORDER.find(candidate => !used.has(candidate));
+  used.add(name);
+  return name;
+}
+
 function renderOverview(chart){
   const thanPalace = chart.palaces[chart.meta.thanPos - 1];
   const menh = palaceByName('Mệnh');
   const menhAnalysis = analyzePalace(menh);
   const firstStrength = menhAnalysis.support[0] || 'Đọc cung Mệnh để nhận diện nguồn lực chính.';
   const firstWatch = menhAnalysis.watch[0] || 'Đối chiếu với hoàn cảnh thật trước khi kết luận.';
+  const used = new Set(['Mệnh']);
+  const second = uniqueOverviewPalace([thanPalace.name,'Phúc Đức','Thiên Di'],used);
+  const third = uniqueOverviewPalace(['Quan Lộc','Thiên Di','Nô Bộc'],used);
+  const fourth = uniqueOverviewPalace(['Tài Bạch','Phúc Đức','Phu Thê','Điền Trạch'],used);
+  const angle = {
+    'Phúc Đức':'Nền giữ cân bằng','Thiên Di':'Cách bước ra bên ngoài','Nô Bộc':'Cách hợp tác',
+    'Tài Bạch':'Cách quản trị nguồn lực','Phu Thê':'Cách đồng hành','Điền Trạch':'Nền tảng an cư'
+  };
+  const secondLabel = second === thanPalace.name && second !== 'Mệnh' ? 'Càng trưởng thành càng rõ' : (angle[second] || PALACE_META[second].label);
   $('#overview-grid').innerHTML = [
     overviewCard('Mệnh','01 · Cốt lõi','featured'),
-    overviewCard(thanPalace.name,'02 · Càng trưởng thành càng rõ'),
-    overviewCard('Quan Lộc','03 · Hướng tạo giá trị'),
-    overviewCard('Tài Bạch','04 · Cách quản trị nguồn lực')
+    overviewCard(second,`02 · ${secondLabel}`),
+    overviewCard(third,`03 · ${third === 'Quan Lộc' ? 'Hướng tạo giá trị' : (angle[third] || PALACE_META[third].label)}`),
+    overviewCard(fourth,`04 · ${angle[fourth] || PALACE_META[fourth].label}`)
   ].join('');
   $('#overview-paths').innerHTML = `<div><span>Điểm nâng đỡ nên dùng</span><strong>${escapeHtml(firstStrength)}</strong></div><div><span>Điều nên kiểm chứng</span><strong>${escapeHtml(firstWatch)}</strong></div><button type="button" data-overview-palace="Phu Thê">Xem tình cảm</button><button type="button" data-overview-palace="Phúc Đức">Xem nội tâm</button>`;
 }
