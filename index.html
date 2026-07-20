@@ -7,12 +7,12 @@
   <meta name="theme-color" content="#f3ecdf">
   <meta name="google" content="notranslate">
   <title>Mệnh Đồ AI — Lá số biết trò chuyện</title>
-  <link rel="stylesheet" href="./styles.css?v=20260720-3">
+  <link rel="stylesheet" href="./styles.css?v=20260720-4">
 </head>
 <body>
   <a class="skip-link" href="#la-so">Đi đến phần lập lá số</a>
   <header class="site-header" id="top">
-    <a class="brand" href="#top" aria-label="Mệnh Đồ AI - Trang đầu"><span class="seal">M</span><span>Mệnh Đồ AI</span><small class="version-badge">v1.5 Public Beta</small></a>
+    <a class="brand" href="#top" aria-label="Mệnh Đồ AI - Trang đầu"><span class="seal">M</span><span>Mệnh Đồ AI</span><small class="version-badge">v1.6 Public Beta</small></a>
     <nav aria-label="Điều hướng chính">
       <a href="#trai-nghiem">Trải nghiệm</a><a href="#cach-hoat-dong">Cách hoạt động</a><a href="#nguyen-tac">Nguyên tắc</a><a class="nav-cta" href="#la-so">Lập lá số</a>
     </nav>
@@ -113,6 +113,11 @@
             <div><input id="guide-query" type="text" autocomplete="off" placeholder="Ví dụ: công việc, tình cảm..."><button type="submit" aria-label="Gửi câu hỏi">→</button></div>
           </form>
           <p class="guide-basis" id="guide-basis">Mỗi câu trả lời đều ghi rõ cung và sao làm căn cứ.</p>
+          <div class="guide-verdict pause" id="guide-verdict">
+            <span id="guide-verdict-label">Cần dữ liệu trước</span>
+            <strong id="guide-verdict-title">Hãy lập lá số hoặc chọn đúng cung để nhận kết luận hành động.</strong>
+            <p id="guide-verdict-copy">Chưa nên kết luận khi chưa có đủ dữ liệu cung và sao.</p>
+          </div>
           <div class="guide-feedback" id="guide-feedback" aria-label="Đánh giá câu trả lời">
             <span>Câu trả lời này có giúp bạn biết bước tiếp theo?</span>
             <div><button type="button" data-feedback="useful">Có, hữu ích</button><button type="button" data-feedback="unclear">Chưa rõ</button></div>
@@ -125,6 +130,7 @@
         <div class="deep-grid">
           <article class="interpretation-card"><p class="card-label">Điều lá số đang gợi mở</p><h4 id="focus-headline">Chạm một cung để bắt đầu</h4><p id="focus-copy"></p><div class="signal-columns"><div><span>Điểm nâng đỡ</span><ul id="focus-support"></ul></div><div><span>Điều cần quan sát</span><ul id="focus-watch"></ul></div></div></article>
           <article class="reflection-card"><p class="card-label">Để biến hiểu biết thành hành động</p><h4>Ba câu hỏi dành cho bạn</h4><ol id="focus-questions"></ol><p class="evidence" id="focus-evidence"></p></article>
+          <article class="action-card pause" id="focus-verdict"><div class="action-verdict-head"><p class="card-label">Kết luận hành động</p><span id="focus-verdict-badge">Chưa nên kết luận</span></div><h4 id="focus-verdict-title">Chọn một cung để nhận kết luận rõ ràng.</h4><p id="focus-verdict-copy">Mỗi kết luận sẽ nói việc nên làm, chưa nên làm hoặc cần điều chỉnh trước.</p><ol id="focus-verdict-steps"></ol><small id="focus-verdict-evidence">Đây là gợi ý tự soi chiếu, không phải mệnh lệnh hay phán quyết số phận.</small></article>
         </div>
       </section>
 
@@ -164,6 +170,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <dialog class="info-dialog" id="info-dialog"><button class="dialog-close" type="button" aria-label="Đóng">×</button><p class="section-kicker" id="dialog-kicker"></p><h2 id="dialog-title">Thông tin</h2><div id="dialog-body"></div></dialog>
-  <script type="module" src="./app.js?v=20260720-3"></script>
+  <script type="module" src="./app.js?v=20260720-4"></script>
 </body>
 </html>
